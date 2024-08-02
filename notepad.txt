@@ -1,0 +1,9 @@
+1. Create Next 14 App và shadcn
+- ShadCN/UI là một thư viện giao diện người dùng (UI) cho React, cung cấp các thành phần UI được thiết kế sẵn và dễ sử dụng. 
+- Install: https://ui.shadcn.com/docs/installation/next
+
+2. Clerk Auth
+- Clerk Auth hỗ trợ nhiều phương thức đăng nhập, bao gồm email, mật khẩu, OAuth, và các phương thức xác thực hai yếu tố (2FA)
+- Hỗ trợ lun cả Expo
+- Create project and install follow step: https://dashboard.clerk.com/
+- ignore ".env" trong ".gitignore" file
