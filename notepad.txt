@@ -13,3 +13,7 @@
 - Example: 
 import { Mail } from 'lucide-react';
 <Mail className="w-6 h-6 text-blue-500" />
+
+4. README Skill Icons
+https://github.com/tandpfun/skill-icons#readme
+https://github.com/alexandresanlim/Badges4-README.md-Profile
