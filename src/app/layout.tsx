@@ -10,6 +10,9 @@ import {
 } from "@clerk/nextjs";
 import NavBar from "@/components/layout/NavBar";
 import { ThemeProvider } from "@/components/theme-provider";
+import AddHotelForm from "@/components/hotel/AddHotelForm";
+import Hotel from "./hotel/[hotelId]/page";
+import Container from "@/components/Container";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +39,14 @@ export default function RootLayout({
           >
             <main className="flex flex-col min-h-screen bg-secondary">
               <NavBar></NavBar>
-              <section className="flex flex-grow">{children}</section>
+              {/* <Hotel
+                params={{
+                  hotelId: "",
+                }}
+              ></Hotel> */}
+              <section className="flex flex-grow">
+                <Container>{children}</Container>
+              </section>
             </main>
           </ThemeProvider>
         </body>

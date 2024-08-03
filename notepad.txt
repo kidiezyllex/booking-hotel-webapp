@@ -29,3 +29,7 @@ https://console.neon.tech/
 npm i prisma
 npm i @prisma/client
 npx prisma init
+
+- Sau khi thiết lập model và relationship
+npx prisma generate
+npx prisma db push

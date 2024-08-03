@@ -1,5 +1,14 @@
 import { Button } from "@/components/ui/button";
+import Hotel from "./hotel/[hotelId]/page";
 
 export default function Home() {
-  return <div>{/* Home page <Button>Next</Button> */}</div>;
+  return (
+    <div>
+      <Hotel
+        params={{
+          hotelId: "",
+        }}
+      ></Hotel>
+    </div>
+  );
 }
