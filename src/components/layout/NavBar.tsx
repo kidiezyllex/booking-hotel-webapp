@@ -7,6 +7,7 @@ import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 // import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
+import { ModeToggle } from "../ModeToggle";
 
 export default function NavBar() {
   const router = useRouter();
@@ -30,12 +31,11 @@ export default function NavBar() {
               <Search className="h-4 w-4" />
             </Button>
           </div>
-          <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
-            <UserButton afterSignOutUrl="/" />
-          </div>
+
+          {/* Avatar */}
 
           {/* Sign in & Sign up & Avatar*/}
-          {!userId && (
+          {!userId ? (
             <div className="flex flex-row gap-3">
               <Button
                 variant="outline"
@@ -52,13 +52,17 @@ export default function NavBar() {
               >
                 Sign In
               </Button>
-              {/* <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>Kidie</AvatarFallback>
-              </Avatar> */}
+              {/* Dark Mode */}
+              <ModeToggle></ModeToggle>
+            </div>
+          ) : (
+            <div className="flex flex-row gap-3">
+              <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+
+              {/* Dark Mode */}
+              <ModeToggle></ModeToggle>
             </div>
           )}
         </div>
