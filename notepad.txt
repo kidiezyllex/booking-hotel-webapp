@@ -17,3 +17,15 @@ import { Mail } from 'lucide-react';
 4. README Skill Icons
 https://github.com/tandpfun/skill-icons#readme
 https://github.com/alexandresanlim/Badges4-README.md-Profile
+
+5. PlanetScale Database (not free)
+https://app.planetscale.com/buitranthienan1111/welcome
+
+6. Free Postgresql Database Server (free) 
+https://console.neon.tech/
+
+7. Prisma 
+- Install: 
+npm i prisma
+npm i @prisma/client
+npx prisma init

@@ -46,7 +46,13 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 ```
 
-4. Run application
+4. Create ".env" file in root folder
+
+```
+DATABASE_URL="postgresql://skyline-hotel_owner:aN2qsXVcZ0hB@ep-rough-rice-a1yynxyh.ap-southeast-1.aws.neon.tech/skyline-hotel?sslmode=require"
+```
+
+5. Run application
 
 ```
 npm run dev
