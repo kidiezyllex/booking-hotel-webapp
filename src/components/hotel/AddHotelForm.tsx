@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+// import { useTranslation } from "react-i18next";
+
+import ima from "../../../i18n/image.jpg";
 
 import {
   Form,
@@ -18,6 +21,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { UploadButton } from "../uploadthing";
+import { useState } from "react";
+import Image from "next/image";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
@@ -28,26 +34,51 @@ const items = [
     label: "Gym",
   },
   {
-    id: "home",
-    label: "Home",
+    id: "spa",
+    label: "Spa",
   },
   {
-    id: "applications",
-    label: "Applications",
+    id: "bar",
+    label: "Bar",
   },
   {
-    id: "desktop",
-    label: "Desktop",
+    id: "laundry",
+    label: "Laundry",
   },
   {
-    id: "downloads",
-    label: "Downloads",
+    id: "restaurant",
+    label: "Restaurant",
   },
   {
-    id: "documents",
-    label: "Documents",
+    id: "shopping",
+    label: "Shopping",
+  },
+  {
+    id: "freeParking",
+    label: "Free Parking",
+  },
+  {
+    id: "bikeRental",
+    label: "Bike Rental",
+  },
+  {
+    id: "freeWifi",
+    label: "Free Wifi",
+  },
+  {
+    id: "movieNights",
+    label: "Movie Nights",
+  },
+  {
+    id: "swimmingPool",
+    label: "Swimming Pool",
+  },
+  {
+    id: "coffeeShop",
+    label: "Coffee Shop",
   },
 ] as const;
+
 const formSchema = z.object({
   //   username: z.string().min(2).max(50),
   title: z.string().min(1, "Title is required"),
@@ -57,20 +88,12 @@ const formSchema = z.object({
   state: z.string().optional(),
   city: z.string().min(1, "City is required"),
   locationDescription: z.string().optional(),
-  gym: z.boolean().optional(),
-  spa: z.boolean().optional(),
-  bar: z.boolean().optional(),
-  laundry: z.boolean().optional(),
-  restaurant: z.boolean().optional(),
-  shopping: z.boolean().optional(),
-  freeParking: z.boolean().optional(),
-  bikeRental: z.boolean().optional(),
-  freeWifi: z.boolean().optional(),
-  movieNights: z.boolean().optional(),
-  swimmingPool: z.boolean().optional(),
-  coffeeShop: z.boolean().optional(),
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "You have to select at least one item.",
+  }),
 });
 const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
+  const [image, setImage] = useState<string | undefined>(hotel?.image);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,37 +104,32 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
       state: "",
       city: "",
       locationDescription: "",
-      gym: false,
-      spa: false,
-      bar: false,
-      laundry: false,
-      restaurant: false,
-      shopping: false,
-      freeParking: false,
-      bikeRental: false,
-      freeWifi: false,
-      movieNights: false,
-      swimmingPool: false,
-      coffeeShop: false,
+      items: [],
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
+
+  // const { t } = useTranslation();
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className=" flex-col grid grid-cols-1 md:grid-cols-3 gap-10">
           <FormField
             control={form.control}
-            name="description"
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Hotel Title</FormLabel>
                 <FormDescription>Provide your Hotel name</FormDescription>
                 <FormControl>
-                  <Input placeholder="Enter your Hotel name" {...field} />
+                  <Input
+                    placeholder="Enter your Hotel name"
+                    {...field}
+                    className="w-full"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,7 +137,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
           />
           <FormField
             control={form.control}
-            name="title"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Hotel Description</FormLabel>
@@ -128,6 +146,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 </FormDescription>
                 <FormControl>
                   <Textarea
+                    className="md:h-44"
                     placeholder="Enter your Hotel description"
                     {...field}
                   />
@@ -145,39 +164,81 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 <FormDescription>
                   Choose Amenities popular in your hotel
                 </FormDescription>
-                {items.map((item) => (
-                  <FormField
-                    key={item.id}
-                    control={form.control}
-                    name="items"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            {item.label}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  {items.map((item) => (
+                    <FormField
+                      key={item.id}
+                      control={form.control}
+                      name="items"
+                      render={({ field }) => {
+                        return (
+                          <FormItem
+                            key={item.id}
+                            className="flex flex-row items-start space-x-3 space-y-0"
+                          >
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value?.includes(item.id)}
+                                onCheckedChange={(checked) => {
+                                  return checked
+                                    ? field.onChange([...field.value, item.id])
+                                    : field.onChange(
+                                        field.value?.filter(
+                                          (value) => value !== item.id
+                                        )
+                                      );
+                                }}
+                              />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              {item.label}
+                            </FormLabel>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  ))}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hotel Image</FormLabel>
+                <FormDescription>Upload your hotel image</FormDescription>
+                <FormControl>
+                  {image ? (
+                    <>
+                      <div className="w-full h-52 flex items-center justify-center py-4 relative">
+                        <Image
+                          layout="fill"
+                          src={image}
+                          alt="Hotel Image"
+                          className="object-cover rounded-md"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="rounded w-full border-dashed border-2 border-white flex items-center justify-center py-4">
+                        <UploadButton
+                          endpoint="imageUploader"
+                          onClientUploadComplete={(res) => {
+                            console.log("Files: ", res);
+                            setImage(res[0].url);
+                          }}
+                          onUploadError={(error: Error) => {
+                            console.log(`ERROR! ${error.message}`);
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
