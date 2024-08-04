@@ -8,6 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // import { useTranslation } from "react-i18next";
 
 import ima from "../../../i18n/image.jpg";
@@ -22,8 +31,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UploadButton } from "../uploadthing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import useLocation from "../../../hook/useLocation";
+import { ICity, ICountry, IState } from "country-state-city";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
@@ -85,7 +96,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   image: z.string().url("Must be a valid URL").optional(),
   country: z.string().min(1, "Country is required"),
-  state: z.string().optional(),
+  state: z.string().min(1, "Country is required"),
   city: z.string().min(1, "City is required"),
   locationDescription: z.string().optional(),
   items: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -94,6 +105,12 @@ const formSchema = z.object({
 });
 const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   const [image, setImage] = useState<string | undefined>(hotel?.image);
+  const [selectedCountry, setSelectedCountry] = useState<ICountry[]>([]);
+  const [selectedState, setSelectedState] = useState<IState[]>([]);
+  const [states, setStates] = useState<IState[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
+  const { getAllCountries, getStateCities, getCountryStates, getStateByCode } =
+    useLocation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -108,6 +125,15 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     },
   });
 
+  useEffect(() => {
+    setStates(getCountryStates(selectedCountry));
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    const stateCities = getStateCities(selectedCountry, selectedState);
+    setCities(stateCities);
+  }, [selectedState]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
@@ -117,53 +143,137 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className=" flex-col grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="flex flex-col gap-10">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tên Khách sạn</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your Hotel name"
+                      {...field}
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mô tả Khách sạn</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="md:h-44"
+                      placeholder="Enter your Hotel description"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex flex-col gap-10">
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Chọn Country</FormLabel>
+                  <Select onValueChange={(value) => setSelectedCountry(value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {getAllCountries.map((country) => {
+                          return (
+                            <SelectItem
+                              key={country.isoCode}
+                              value={country.isoCode}
+                            >
+                              {country.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Chọn State</FormLabel>
+                  <Select
+                    disabled={selectedCountry.length < 1}
+                    onValueChange={(value) => setSelectedState(value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {states.map((state) => {
+                          return (
+                            <SelectItem
+                              key={state.isoCode}
+                              value={state.isoCode}
+                            >
+                              {state.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Chọn City</FormLabel>
+                  <Select disabled={cities.length < 1}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {cities.map((city) => {
+                          return (
+                            <SelectItem key={city.name} value={city.name}>
+                              {city.name}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Hotel Title</FormLabel>
-                <FormDescription>Provide your Hotel name</FormDescription>
-                <FormControl>
-                  <Input
-                    placeholder="Enter your Hotel name"
-                    {...field}
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Hotel Description</FormLabel>
-                <FormDescription>
-                  Provide your Hotel description
-                </FormDescription>
-                <FormControl>
-                  <Textarea
-                    className="md:h-44"
-                    placeholder="Enter your Hotel description"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Choose Amenities</FormLabel>
-                <FormDescription>
-                  Choose Amenities popular in your hotel
-                </FormDescription>
+                <FormLabel>Chọn các tiện ích</FormLabel>
                 <div className="grid grid-cols-2 gap-4 mt-2">
                   {items.map((item) => (
                     <FormField
@@ -209,7 +319,6 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Hotel Image</FormLabel>
-                <FormDescription>Upload your hotel image</FormDescription>
                 <FormControl>
                   {image ? (
                     <>
@@ -228,7 +337,6 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                         <UploadButton
                           endpoint="imageUploader"
                           onClientUploadComplete={(res) => {
-                            console.log("Files: ", res);
                             setImage(res[0].url);
                           }}
                           onUploadError={(error: Error) => {

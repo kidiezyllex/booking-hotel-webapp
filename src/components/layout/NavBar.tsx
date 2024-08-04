@@ -8,7 +8,10 @@ import { Search } from "lucide-react";
 // import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
-
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import skylineLogo from "../../assets/Skyline.png";
+import { SheetToggle } from "../SheetToggle";
+import { Skeleton } from "../ui/skeleton";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
@@ -16,12 +19,20 @@ export default function NavBar() {
   return (
     <div className="sticky top-0 border border-b-primary/10 bg-secondary">
       <Container>
-        <div className="flex flex-row items-stretch justify-between">
+        <div className="items-stretch justify-between grid grid-cols-3 gap-10">
           {/* Logo */}
           <div
-            className="flex flex-row gap-1 items-center"
+            className="flex flex-row items-center gap-3"
             onClick={() => router.push("/")}
           >
+            <Avatar>
+              <AvatarImage
+                src={
+                  "https://res.cloudinary.com/drqbhj6ft/image/upload/v1722756627/Skyline_a3z8ck.png"
+                }
+                alt="SKyline"
+              />
+            </Avatar>
             <div className="font-bold text-xl">Skyline Hotel</div>
           </div>
           {/* Search Field */}
@@ -32,11 +43,9 @@ export default function NavBar() {
             </Button>
           </div>
 
-          {/* Avatar */}
-
           {/* Sign in & Sign up & Avatar*/}
           {!userId ? (
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row gap-3 justify-end">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -54,15 +63,17 @@ export default function NavBar() {
               </Button>
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
+              <SheetToggle></SheetToggle>
             </div>
           ) : (
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row gap-3 justify-end">
               <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
                 <UserButton afterSignOutUrl="/" />
               </div>
 
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
+              <SheetToggle></SheetToggle>
             </div>
           )}
         </div>

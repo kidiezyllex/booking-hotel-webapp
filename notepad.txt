@@ -57,3 +57,6 @@ export const ourFileRouter = {
     }),
 } satisfies FileRouter;
 export type OurFileRouter = typeof ourFileRouter;
+
+9. Country & State
+- npm i country-state-city
