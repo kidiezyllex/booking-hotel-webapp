@@ -9,36 +9,35 @@ generator client {
 }
 
 model Hotel {
-  id                  String  @id @default(uuid())
+  id                  Int      @id @default(autoincrement()) // Tự động tăng
   userId              String
-  title               String  @db.Text
+  title               String   @db.Text
   description         String  
   image               String
   country             String
   state               String
   city                String
   locationDescription String  
-  gym                 Boolean @default(false)
-  spa                 Boolean @default(false)
-  bar                 Boolean @default(false)
-  laundry             Boolean @default(false)
-  restaurant          Boolean @default(false)
-  shopping            Boolean @default(false)
-  freeParking         Boolean @default(false)
-  bikeRental          Boolean @default(false)
-  freeWifi            Boolean @default(false)
-  movieNights         Boolean @default(false)
-  swimmingPool        Boolean @default(false)
-  coffeeShop          Boolean @default(false)
+  gym                 Boolean  @default(false)
+  spa                 Boolean  @default(false)
+  bar                 Boolean  @default(false)
+  laundry             Boolean  @default(false)
+  restaurant          Boolean  @default(false)
+  shopping            Boolean  @default(false)
+  freeParking         Boolean  @default(false)
+  bikeRental          Boolean  @default(false)
+  freeWifi            Boolean  @default(false)
+  movieNights         Boolean  @default(false)
+  swimmingPool        Boolean  @default(false)
+  coffeeShop          Boolean  @default(false)
   addedAt             DateTime @default(now())
   updatedAt           DateTime @default(now())
   rooms               Room[]
   bookings            Booking[]
-
 }
 
 model Room {
-  id            String  @id @default(uuid())
+  id            Int     @id @default(autoincrement()) // Tự động tăng
   title         String
   description   String  
   bedCount      Int     @default(0)
@@ -59,22 +58,19 @@ model Room {
   mountainView  Boolean @default(false)
   airCondition  Boolean @default(false)
   soundProofed  Boolean @default(false)
-  hotelId       String
+  hotelId       Int
   Hotel         Hotel?  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
-  // Quan hệ với mô hình Hotel, nếu Hotel bị xóa thì Room cũng bị xóa
-  
-  Booking Booking[]
+  Booking       Booking[]
 
   @@index([hotelId])
-  // Tạo chỉ mục cho trường hotelId
 }
 
 model Booking {
-  id                  String   @id @default(uuid()) 
+  id                  Int      @id @default(autoincrement()) // Tự động tăng
   userName            String 
   userId              String 
-  roomId              String 
-  hotelId             String 
+  roomId              Int 
+  hotelId             Int 
   hotelOwnerId        String
   startDate           DateTime 
   endDate             DateTime
@@ -82,13 +78,13 @@ model Booking {
   currency            String 
   totalPrice          Int 
   paymentStatus       Boolean @default(false) 
-  paymentIntentId     String @unique 
+  paymentIntentId     String  @unique 
   bookedAt            DateTime @default(now()) 
-  Hotel               Hotel? @relation(fields: [hotelId], references: [id])
-  Room                Room? @relation(fields: [roomId], references: [id]) 
+  Hotel               Hotel?  @relation(fields: [hotelId], references: [id])
+  Room                Room?   @relation(fields: [roomId], references: [id]) 
 
-  @@index([hotelId]) // Tạo chỉ mục cho trường hotelId
-  @@index([roomId]) // Tạo chỉ mục cho trường roomId
+  @@index([hotelId])
+  @@index([roomId])
 }
 
 

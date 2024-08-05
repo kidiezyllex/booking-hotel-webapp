@@ -15,11 +15,11 @@ interface HotelPageProps {
 // };
 const Hotel = async ({ params }: HotelPageProps) => {
   console.log("hotelId", params.hotelId);
-  const hotel = await getHotelById(params.hotelId);
+  // const hotel = await getHotelById(params.hotelId);
   //   const { userId } = auth();
   return (
     <div>
-      <AddHotelForm hotel={hotel}></AddHotelForm>
+      <AddHotelForm></AddHotelForm>
     </div>
   );
 };

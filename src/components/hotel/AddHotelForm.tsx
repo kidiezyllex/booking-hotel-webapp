@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { Hotel, Room } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -35,6 +35,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import useLocation from "../../../hook/useLocation";
 import { ICity, ICountry, IState } from "country-state-city";
+import { FilePen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
@@ -103,14 +106,23 @@ const formSchema = z.object({
     message: "You have to select at least one item.",
   }),
 });
-const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
-  const [image, setImage] = useState<string | undefined>(hotel?.image);
+// const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
+const AddHotelForm = () => {
+  const router = useRouter();
+  const { userId } = useAuth();
+
+  const [image, setImage] = useState<string | undefined>(undefined);
   const [selectedCountry, setSelectedCountry] = useState<ICountry[]>([]);
   const [selectedState, setSelectedState] = useState<IState[]>([]);
   const [states, setStates] = useState<IState[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
-  const { getAllCountries, getStateCities, getCountryStates, getStateByCode } =
-    useLocation();
+  const {
+    getAllCountries,
+    getStateCities,
+    getCountryStates,
+    getStateByCode,
+    getCountryByCode,
+  } = useLocation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -126,6 +138,16 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   });
 
   useEffect(() => {
+    if (typeof image === "string") {
+      form.setValue("image", image, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [image]);
+
+  useEffect(() => {
     setStates(getCountryStates(selectedCountry));
   }, [selectedCountry]);
 
@@ -135,7 +157,38 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
   }, [selectedState]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const amenities = {
+      gym: values.items.includes("gym"),
+      spa: values.items.includes("spa"),
+      bar: values.items.includes("bar"),
+      laundry: values.items.includes("laundry"),
+      restaurant: values.items.includes("restaurant"),
+      shopping: values.items.includes("shopping"),
+      freeParking: values.items.includes("freeParking"),
+      bikeRental: values.items.includes("bikeRental"),
+      freeWifi: values.items.includes("freeWifi"),
+      movieNights: values.items.includes("movieNights"),
+      swimmingPool: values.items.includes("swimmingPool"),
+      coffeeShop: values.items.includes("coffeeShop"),
+    };
+    const { items, ...newValue } = values;
+    const payload = {
+      userId,
+      ...newValue,
+      ...amenities,
+      addedAt: new Date(),
+      updatedAt: new Date(),
+    };
+    axios
+      .post("/api/hotel", payload)
+      .then((res) => {
+        // toast
+        router.push(`/hotel/${res.data.id}`);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        // toast
+      });
   }
 
   // const { t } = useTranslation();
@@ -143,7 +196,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className=" flex-col grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-6">
             <FormField
               control={form.control}
               name="title"
@@ -169,7 +222,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   <FormLabel>Mô tả Khách sạn</FormLabel>
                   <FormControl>
                     <Textarea
-                      className="md:h-44"
+                      className="md:h-32"
                       placeholder="Enter your Hotel description"
                       {...field}
                     />
@@ -178,15 +231,58 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Hotel Image</FormLabel>
+                  <FormControl>
+                    {image ? (
+                      <>
+                        <div className="w-full h-52 flex items-center justify-center py-4 relative">
+                          <Image
+                            layout="fill"
+                            src={image}
+                            alt="Hotel Image"
+                            className="object-cover rounded-md"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="h-32 rounded w-full border-dashed border-2 border-white flex items-center justify-center py-4">
+                          <UploadButton
+                            endpoint="imageUploader"
+                            onClientUploadComplete={(res) => {
+                              setImage(res[0].url);
+                            }}
+                            onUploadError={(error: Error) => {
+                              console.log(`ERROR! ${error.message}`);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-6">
             <FormField
               control={form.control}
               name="country"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Chọn Country</FormLabel>
-                  <Select onValueChange={(value) => setSelectedCountry(value)}>
+                  <Select
+                    onValueChange={(value) => {
+                      setSelectedCountry(value);
+                      field.onChange(getCountryByCode(value).name);
+                    }}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a country" />
                     </SelectTrigger>
@@ -217,7 +313,12 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   <FormLabel>Chọn State</FormLabel>
                   <Select
                     disabled={selectedCountry.length < 1}
-                    onValueChange={(value) => setSelectedState(value)}
+                    onValueChange={(value) => {
+                      setSelectedState(value);
+                      field.onChange(
+                        getStateByCode(selectedCountry.toString(), value).name
+                      );
+                    }}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a state" />
@@ -247,7 +348,12 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Chọn City</FormLabel>
-                  <Select disabled={cities.length < 1}>
+                  <Select
+                    disabled={cities.length < 1}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a city" />
                     </SelectTrigger>
@@ -267,93 +373,80 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 </FormItem>
               )}
             />
-          </div>
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Chọn các tiện ích</FormLabel>
-                <div className="grid grid-cols-2 gap-4 mt-2">
-                  {items.map((item) => (
-                    <FormField
-                      key={item.id}
-                      control={form.control}
-                      name="items"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.id)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, item.id])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {item.label}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
+            <FormField
+              control={form.control}
+              name="locationDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mô tả vị trí</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="md:h-32"
+                      placeholder="Enter your Location Description"
+                      {...field}
                     />
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Hotel Image</FormLabel>
-                <FormControl>
-                  {image ? (
-                    <>
-                      <div className="w-full h-52 flex items-center justify-center py-4 relative">
-                        <Image
-                          layout="fill"
-                          src={image}
-                          alt="Hotel Image"
-                          className="object-cover rounded-md"
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="rounded w-full border-dashed border-2 border-white flex items-center justify-center py-4">
-                        <UploadButton
-                          endpoint="imageUploader"
-                          onClientUploadComplete={(res) => {
-                            setImage(res[0].url);
-                          }}
-                          onUploadError={(error: Error) => {
-                            console.log(`ERROR! ${error.message}`);
-                          }}
-                        />
-                      </div>
-                    </>
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex flex-col justify-between">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Chọn các tiện ích</FormLabel>
+                  <div className="grid grid-cols-2 gap-6 mt-2">
+                    {items.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="items"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-center space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  className="h-5 w-5"
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...field.value,
+                                          item.id,
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {item.label}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="flex flex-row gap-3">
+              <FilePen h-4 w-4 />
+              Đăng ký Khách sạn
+            </Button>
+          </div>
         </div>
-
-        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
