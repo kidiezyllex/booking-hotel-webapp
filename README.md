@@ -46,7 +46,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 DATABASE_URL="postgresql://skyline-hotel_owner:aN2qsXVcZ0hB@ep-rough-rice-a1yynxyh.ap-southeast-1.aws.neon.tech/skyline-hotel?sslmode=require"
 
-UPLOADTHING_SECRET=sk_live_8955c185340c76a8dfe083350fbb3315c221b6225533bb99729ddaa16355dd64
+<!-- UPLOADTHING_SECRET=sk_live_8955c185340c76a8dfe083350fbb3315c221b6225533bb99729ddaa16355dd64 -->
 UPLOADTHING_APP_ID=lyqsbjuuos
 ```
 
