@@ -44,7 +44,7 @@ NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
-DATABASE_URL="postgresql://skyline-hotel_owner:aN2qsXVcZ0hB@ep-rough-rice-a1yynxyh.ap-southeast-1.aws.neon.tech/skyline-hotel?sslmode=require"
+DATABASE_URL=
 
 UPLOADTHING_SECRET=
 UPLOADTHING_APP_ID=
@@ -53,7 +53,7 @@ UPLOADTHING_APP_ID=
 4. Create ".env" file in root folder
 
 ```
-DATABASE_URL="postgresql://skyline-hotel_owner:aN2qsXVcZ0hB@ep-rough-rice-a1yynxyh.ap-southeast-1.aws.neon.tech/skyline-hotel?sslmode=require"
+DATABASE_URL=
 ```
 
 5. Run application
