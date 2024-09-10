@@ -20,6 +20,14 @@ import {
 // import { useTranslation } from "react-i18next";
 
 import ima from "../../../i18n/image.jpg";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 import {
   Form,
@@ -35,7 +43,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import useLocation from "../../../hook/useLocation";
 import { ICity, ICountry, IState } from "country-state-city";
-import { FilePen } from "lucide-react";
+import { FilePen, Hospital, HousePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 interface AddHotelFormProps {
@@ -106,12 +114,12 @@ const formSchema = z.object({
     message: "You have to select at least one item.",
   }),
 });
-// const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
-const AddHotelForm = () => {
+const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
+  console.log(hotel);
   const router = useRouter();
   const { userId } = useAuth();
 
-  const [image, setImage] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string | undefined>(hotel?.image);
   const [selectedCountry, setSelectedCountry] = useState<ICountry[]>([]);
   const [selectedState, setSelectedState] = useState<IState[]>([]);
   const [states, setStates] = useState<IState[]>([]);
@@ -184,6 +192,7 @@ const AddHotelForm = () => {
       .then((res) => {
         // toast
         router.push(`/hotel/${res.data.id}`);
+        console.log(res.data.id);
       })
       .catch((err) => {
         console.log(err.message);
@@ -191,264 +200,349 @@ const AddHotelForm = () => {
       });
   }
 
+  const handleDeleteHotel = async (hotel: HotelWithRooms) => {
+    // setIsHotelDeleting(true);
+
+    const getImageKey = (src: string) =>
+      src.substring(src.lastIndexOf("/") + 1);
+
+    try {
+      const imageKey = getImageKey(hotel.image);
+
+      // Delete the image first
+      await axios.post("/api/uploadthing/delete", { imageKey });
+
+      // Delete the hotel record
+      await axios.delete(`/api/hotel/${hotel.id}`);
+      router.push("/hotel/new");
+
+      // setIsHotelDeleting(false);
+
+      // Show success message
+      // toast({
+      //   variant: "success",
+      //   description: "Hotel Deleted!",
+      // });
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+
   // const { t } = useTranslation();
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className=" flex-col grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="flex flex-col gap-6">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tên Khách sạn</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your Hotel name"
-                      {...field}
-                      className="w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mô tả Khách sạn</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="md:h-32"
-                      placeholder="Enter your Hotel description"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Hotel Image</FormLabel>
-                  <FormControl>
-                    {image ? (
-                      <>
-                        <div className="w-full h-52 flex items-center justify-center py-4 relative">
-                          <Image
-                            layout="fill"
-                            src={image}
-                            alt="Hotel Image"
-                            className="object-cover rounded-md"
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="h-32 rounded w-full border-dashed border-2 border-white flex items-center justify-center py-4">
-                          <UploadButton
-                            endpoint="imageUploader"
-                            onClientUploadComplete={(res) => {
-                              setImage(res[0].url);
-                            }}
-                            onUploadError={(error: Error) => {
-                              console.log(`ERROR! ${error.message}`);
-                            }}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex flex-col gap-6">
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Chọn Country</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      setSelectedCountry(value);
-                      field.onChange(getCountryByCode(value).name);
-                    }}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {getAllCountries.map((country) => {
-                          return (
-                            <SelectItem
-                              key={country.isoCode}
-                              value={country.isoCode}
-                            >
-                              {country.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="state"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Chọn State</FormLabel>
-                  <Select
-                    disabled={selectedCountry.length < 1}
-                    onValueChange={(value) => {
-                      setSelectedState(value);
-                      field.onChange(
-                        getStateByCode(selectedCountry.toString(), value).name
-                      );
-                    }}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a state" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {states.map((state) => {
-                          return (
-                            <SelectItem
-                              key={state.isoCode}
-                              value={state.isoCode}
-                            >
-                              {state.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Chọn City</FormLabel>
-                  <Select
-                    disabled={cities.length < 1}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                    }}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a city" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {cities.map((city) => {
-                          return (
-                            <SelectItem key={city.name} value={city.name}>
-                              {city.name}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="locationDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Mô tả vị trí</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="md:h-32"
-                      placeholder="Enter your Location Description"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="flex flex-col justify-between">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Chọn các tiện ích</FormLabel>
-                  <div className="grid grid-cols-2 gap-6 mt-2">
-                    {items.map((item) => (
-                      <FormField
-                        key={item.id}
-                        control={form.control}
-                        name="items"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={item.id}
-                              className="flex flex-row items-center space-x-3 space-y-0"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  className="h-5 w-5"
-                                  checked={field.value?.includes(item.id)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([
-                                          ...field.value,
-                                          item.id,
-                                        ])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {item.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className=" flex-col grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tên Khách sạn</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your Hotel name"
+                        {...field}
+                        className="w-full"
+                        value={hotel?.title}
                       />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="flex flex-row gap-3">
-              <FilePen h-4 w-4 />
-              Đăng ký Khách sạn
-            </Button>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mô tả Khách sạn</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="md:h-32"
+                        placeholder="Enter your Hotel description"
+                        {...field}
+                        value={hotel?.description}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hotel Image</FormLabel>
+                    <FormControl>
+                      {image ? (
+                        <>
+                          <div className="w-full h-52 flex items-center justify-center py-4 relative">
+                            <Image
+                              layout="fill"
+                              src={hotel?.image ? hotel?.image : image}
+                              alt="Hotel Image"
+                              className="object-cover rounded-md"
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="h-32 rounded w-full border-dashed border-2 border-white flex items-center justify-center py-4">
+                            <UploadButton
+                              endpoint="imageUploader"
+                              onClientUploadComplete={(res) => {
+                                setImage(res[0].url);
+                              }}
+                              onUploadError={(error: Error) => {
+                                console.log(`ERROR! ${error.message}`);
+                              }}
+                            />
+                          </div>
+                        </>
+                      )}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chọn Country</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        setSelectedCountry(value);
+                        field.onChange(getCountryByCode(value).name);
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        {hotel?.country ? (
+                          <SelectValue placeholder={hotel.country} />
+                        ) : (
+                          <SelectValue placeholder="Select a country" />
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {getAllCountries.map((country) => {
+                            return (
+                              <SelectItem
+                                key={country.isoCode}
+                                value={country.isoCode}
+                              >
+                                {country.name}
+                                {/* {hotel?.country ? hotel.country : country.name} */}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chọn State</FormLabel>
+                    <Select
+                      disabled={selectedCountry.length < 1}
+                      onValueChange={(value) => {
+                        setSelectedState(value);
+                        field.onChange(
+                          getStateByCode(selectedCountry.toString(), value).name
+                        );
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        {hotel?.state ? (
+                          <SelectValue placeholder={hotel.state} />
+                        ) : (
+                          <SelectValue placeholder="Select a state" />
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {states.map((state) => {
+                            return (
+                              <SelectItem
+                                key={state.isoCode}
+                                value={state.isoCode}
+                              >
+                                {state.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chọn City</FormLabel>
+                    <Select
+                      disabled={cities.length < 1}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                      }}
+                    >
+                      <SelectTrigger className="w-full">
+                        {hotel?.city ? (
+                          <SelectValue placeholder={hotel.city} />
+                        ) : (
+                          <SelectValue placeholder="Select a city" />
+                        )}
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {cities.map((city) => {
+                            return (
+                              <SelectItem key={city.name} value={city.name}>
+                                {city.name}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="locationDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Mô tả vị trí</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="md:h-32"
+                        placeholder="Enter your Location Description"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col justify-between">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chọn các tiện ích</FormLabel>
+                    <div className="grid grid-cols-2 gap-6 mt-2">
+                      {items.map((item) => (
+                        <FormField
+                          key={item.id}
+                          control={form.control}
+                          name="items"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item.id}
+                                className="flex flex-row items-center space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    className="h-5 w-5"
+                                    checked={field.value?.includes(item.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...field.value,
+                                            item.id,
+                                          ])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== item.id
+                                            )
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {item.label}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex flex-row gap-3 justify-between mt-5">
+                {hotel ? null : (
+                  <Button type="submit" className="flex flex-row gap-3">
+                    <FilePen h-4 w-4 />
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+      <div className="flex flex-row gap-10 justify-center mt-16">
+        {/* {hotel ? (
+          <Button className="flex flex-row gap-3">
+            <HousePlus h-4 w-4 />
+          </Button>
+        ) : (
+          <Button type="submit" className="flex flex-row gap-3">
+            <FilePen h-4 w-4 />
+          </Button>
+        )} */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button type="submit" className="flex flex-row gap-3">
+              <HousePlus h-4 w-4 />
+              Thêm phòng
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+
+        <Button type="submit" className="flex flex-row gap-3">
+          <Pencil h-4 w-4 />
+          Cập nhật khách sạn
+        </Button>
+        <Button type="submit" className="flex flex-row gap-3">
+          <Trash2 h-4 w-4 />
+          Xoá khách sạn
+        </Button>
+      </div>
+    </div>
   );
 };
 

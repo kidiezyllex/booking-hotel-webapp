@@ -1,8 +1,6 @@
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient();
 import prismadb from "../../lib/prismadb";
 
-export const getHotelById = async (hotelId: string) => {
+export const getHotelById = async (hotelId: number) => {
   try {
     const hotel = await prismadb.hotel.findUnique({
       where: {
@@ -10,12 +8,11 @@ export const getHotelById = async (hotelId: string) => {
       },
       include: {
         rooms: true,
-        bookings: true,
+        // bookings: true,
       },
     });
 
     if (!hotel) {
-      //   throw new Error(`Hotel with ID ${hotelId} not found.`);
       return null;
     }
 

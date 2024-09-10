@@ -2,6 +2,9 @@
 - ShadCN/UI là một thư viện giao diện người dùng (UI) cho React, cung cấp các thành phần UI được thiết kế sẵn và dễ sử dụng. 
 - Install: https://ui.shadcn.com/docs/installation/next
 - Component: https://ui.shadcn.com/docs/components
+- Tìm hiểu về cấu trúc thư mục của NextJS Project:
+https://nextjs.org/docs/getting-started/project-structure
+- NextJs nó hỗ trợ cơ chế để tạo route
 2. Clerk Auth
 - Clerk Auth hỗ trợ nhiều phương thức đăng nhập, bao gồm email, mật khẩu, OAuth, và các phương thức xác thực hai yếu tố (2FA)
 - Hỗ trợ lun cả Expo
@@ -34,6 +37,9 @@ npx prisma init
 npx prisma generate
 npx prisma db push
 
+- Xem data đã được push lên DB hay chưa:
+npx prisma studio để mở dashboard
+
 8. Uploadthing
 - Công cụ upload Image
 - Document: https://docs.uploadthing.com/
@@ -60,3 +66,14 @@ export type OurFileRouter = typeof ourFileRouter;
 
 9. Country & State
 - npm i country-state-city
+
+10. Kinh nghiệm fix lỗi 01
+Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "asChild" không thì sẽ bị lỗi sau:
+Error: Hydration failed because the initial UI does not match what was rendered on the server.
+
+<DialogTrigger asChild>
+  <Button type="submit" className="flex flex-row gap-3">
+  <HousePlus h-4 w-4 />
+    Thêm phòng
+  </Button>
+</DialogTrigger>

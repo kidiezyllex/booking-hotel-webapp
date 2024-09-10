@@ -1,25 +1,20 @@
 import { getHotelById } from "@/actions/getHotelById";
 import AddHotelForm from "@/components/hotel/AddHotelForm";
 import { auth } from "@clerk/nextjs/server";
+import axios from "axios";
 import React from "react";
 
 interface HotelPageProps {
-  params: { hotelId: string };
+  params: { hotelId: number };
 }
-// interface AddHotelFormProps {
-//   hotel: HotelWithRooms | null;
-// }
 
-// export type HotelWithRooms = Hotel & {
-//   room: Room[];
-// };
 const Hotel = async ({ params }: HotelPageProps) => {
-  console.log("hotelId", params.hotelId);
-  // const hotel = await getHotelById(params.hotelId);
-  //   const { userId } = auth();
+  console.log("hotelId:", Number(params.hotelId));
+  let nhotel = await getHotelById(Number(params.hotelId));
+  console.log(nhotel);
   return (
     <div>
-      <AddHotelForm></AddHotelForm>
+      <AddHotelForm hotel={nhotel}></AddHotelForm>
     </div>
   );
 };
