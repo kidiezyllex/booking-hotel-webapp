@@ -1,0 +1,95 @@
+[33mcommit 6042ef936cd3ab5a648499c31cba1b2af4774199[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Wed Sep 11 06:40:57 2024 +0700
+
+    fix/show hotel by hotelId
+
+[33mcommit 90608160075f8b119350a1a2975695aed382b87f[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Wed Sep 11 06:38:26 2024 +0700
+
+    Remove secret from README.md
+
+[33mcommit cefbb427b26a302b63d7c0ce8f74531a51756c5a[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Wed Sep 11 06:32:17 2024 +0700
+
+    fix/show hotel by hotelId
+
+[33mcommit 19147ceef1cccb1e5953778fde93c20dd8321df5[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Wed Sep 11 06:29:49 2024 +0700
+
+    fix/show hotel by hotelId
+
+[33mcommit b03f5af1c96c7a8bc2f144c21f2987301b9b8747[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Mon Aug 5 15:48:53 2024 +0700
+
+    handle/create your hotel
+
+[33mcommit de13a5dcd4373a40b8a856f1b91ecac687791834[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sun Aug 4 23:03:45 2024 +0700
+
+    handle/choose country, state, city
+
+[33mcommit 5a7a546e8222b10e01195eec730fabba15847e70[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sun Aug 4 14:13:37 2024 +0700
+
+    handle/image uploading
+
+[33mcommit 81909925c1b396efb8f90deeb9c061cc53b08d2f[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 16:50:12 2024 +0700
+
+    create/AddHotelForm using Shadcn/UI
+
+[33mcommit 50530fc6223a7b740b3eb6501c6c2f4277022a03[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 14:34:33 2024 +0700
+
+    create/orm using prisma
+
+[33mcommit 782789adfc4b35da0820364c013471d07115c1a0[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 12:39:54 2024 +0700
+
+    create/Dark Mode toggle using ShadcnUI
+
+[33mcommit 137301ab399baceeb1094df2deceb72273e23bf9[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 12:15:47 2024 +0700
+
+    update/RM
+
+[33mcommit b8a923abeae498e67f7b1055579354ff22ffb3e0[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 09:49:21 2024 +0700
+
+    update/README
+
+[33mcommit 98f5a71c0efbb813c9c9156fc346bd6da49ff412[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 09:45:31 2024 +0700
+
+    handle/sign-up & sign-in FB, GG, Github, Mail using Clerk
+
+[33mcommit 0534cb9d956f6d1385b03c218c1b82cfe7edda5a[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Sat Aug 3 07:19:45 2024 +0700
+
+    create navbar
+
+[33mcommit 15ff04ed97d1b69574cdd9b4fca05f1a031951be[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Fri Aug 2 17:56:45 2024 +0700
+
+    set up next 14 & clerk
+
+[33mcommit ad4747724be51f41d4e1e07995a7efcf151eb477[m
+Author: Bui Tran Thien An <buitranthienan1111@gmail.com>
+Date:   Fri Aug 2 14:19:43 2024 +0700
+
+    Initial commit from Create Next App
