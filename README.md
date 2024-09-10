@@ -38,16 +38,16 @@ npm i
 3. Create ".env.local" file in root folder
 
 ```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_Z3JhbmQtbW9vc2UtMjkuY2xlcmsuYWNjb3VudHMuZGV2JA
-CLERK_SECRET_KEY=sk_test_bgGigKU4fPzYC2KphUEEDAXS99K1sLiGvmia1mfJWm
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 DATABASE_URL="postgresql://skyline-hotel_owner:aN2qsXVcZ0hB@ep-rough-rice-a1yynxyh.ap-southeast-1.aws.neon.tech/skyline-hotel?sslmode=require"
 
-<!-- UPLOADTHING_SECRET=sk_live_8955c185340c76a8dfe083350fbb3315c221b6225533bb99729ddaa16355dd64 -->
-UPLOADTHING_APP_ID=lyqsbjuuos
+UPLOADTHING_SECRET=
+UPLOADTHING_APP_ID=
 ```
 
 4. Create ".env" file in root folder
