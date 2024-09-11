@@ -116,7 +116,6 @@ const formSchema = z.object({
   }),
 });
 const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
-  // console.log(hotel);
   const router = useRouter();
   const { userId } = useAuth();
 

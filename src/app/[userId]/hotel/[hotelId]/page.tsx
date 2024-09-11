@@ -5,7 +5,7 @@ import axios from "axios";
 import React from "react";
 
 interface HotelPageProps {
-  params: { hotelId: number };
+  params: { hotelId: number; userId: string };
 }
 
 const Hotel = async ({ params }: HotelPageProps) => {

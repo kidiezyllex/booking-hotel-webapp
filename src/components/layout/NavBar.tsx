@@ -1,7 +1,6 @@
 "use client";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import Container from "../Container";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
@@ -9,9 +8,7 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import skylineLogo from "../../assets/Skyline.png";
 import { SheetToggle } from "../SheetToggle";
-import { Skeleton } from "../ui/skeleton";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();

@@ -22,6 +22,8 @@ import {
 import Container from "../Container";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
+import HotelList from "../hotel/HotelList";
+import { getHotels } from "@/actions/getHotels";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -39,9 +41,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+interface HomeProps {
+  searchParams: {
+    title: string;
+    country: string;
+    state: string;
+    city: string;
+  };
+}
 export default function Hero() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
+
   return isHomePage ? (
     <Container>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%]  gap-5 items-center">

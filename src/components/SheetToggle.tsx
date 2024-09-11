@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useAuth } from "@clerk/nextjs";
 import {
   FilePen,
   Hotel,
@@ -18,8 +19,11 @@ import {
   Menu,
   MessageSquareText,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function SheetToggle() {
+  const router = useRouter();
+  const { userId } = useAuth();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -34,6 +38,9 @@ export function SheetToggle() {
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
+          onClick={() => {
+            router.push(`/${userId}/hotel/list`);
+          }}
         >
           <Hotel h-4 w-4 />
           Xem Khách sạn của bạn
@@ -41,6 +48,9 @@ export function SheetToggle() {
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
+          onClick={() => {
+            router.push(`/${userId}/hotel/0`);
+          }}
         >
           <FilePen h-4 w-4 />
           Đăng ký Khách sạn của bạn
