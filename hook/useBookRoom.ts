@@ -20,26 +20,19 @@ type RoomDataType = {
   endDate: Date;
 };
 
-const useBookRoom = create<BookRoomStore>(
-  persist(
-    (set) => ({
+const useBookRoom = create<BookRoomStore>((set) => ({
+  bookingRoomData: null,
+  paymentIntent: null,
+  clientSecret: undefined,
+  setRoomData: (data) => set(() => ({ bookingRoomData: data })),
+  setPaymentIntent: (paymentIntent) => set(() => ({ paymentIntent })),
+  setClientSecret: (clientSecret) => set(() => ({ clientSecret })),
+  resetBookRoom: () =>
+    set(() => ({
       bookingRoomData: null,
       paymentIntent: null,
       clientSecret: undefined,
-      setRoomData: (data) => set(() => ({ bookingRoomData: data })),
-      setPaymentIntent: (paymentIntent) => set(() => ({ paymentIntent })),
-      setClientSecret: (clientSecret) => set(() => ({ clientSecret })),
-      resetBookRoom: () =>
-        set(() => ({
-          bookingRoomData: null,
-          paymentIntent: null,
-          clientSecret: undefined,
-        })),
-    }),
-    {
-      name: "BookRoom", // Corrected the syntax for the 'name' option.
-    }
-  )
-);
+    })),
+}));
 
 export default useBookRoom;
