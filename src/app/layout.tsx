@@ -13,6 +13,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import AddHotelForm from "@/components/hotel/AddHotelForm";
 import Hotel from "./hotel/[hotelId]/page";
 import Container from "@/components/Container";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
+          <NextTopLoader />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -39,11 +41,6 @@ export default function RootLayout({
           >
             <main className="flex flex-col min-h-screen bg-secondary">
               <NavBar></NavBar>
-              {/* <Hotel
-                params={{
-                  hotelId: "",
-                }}
-              ></Hotel> */}
               <section className="flex flex-grow">
                 <Container>{children}</Container>
               </section>

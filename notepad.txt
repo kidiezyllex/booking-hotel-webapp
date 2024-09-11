@@ -81,3 +81,6 @@ Solve: Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "a
 Lỗi bạn gặp phải liên quan đến tính năng bảo vệ của GitHub gọi là Push Protection. Nó phát hiện thấy có thông tin nhạy cảm (như API keys hoặc mật khẩu) trong các commit của bạn và từ chối cho phép đẩy các thay đổi lên remote.
 
 Solve: Truy cập GitHub Secret Scanning à nhấn Allow
+
+11. Loading Libraries 
+npm install nextjs-toploader

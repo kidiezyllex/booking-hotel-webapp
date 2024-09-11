@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+
 import {
   Select,
   SelectContent,
@@ -45,6 +47,7 @@ import { FilePen, Hospital, HousePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import AddRoomForm from "../room/AddRoomForm";
+import RoomCard from "../room/RoomCard";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
@@ -540,6 +543,18 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
             <Trash2 h-4 w-4 />
             Xoá khách sạn
           </Button>
+        </div>
+      )}
+
+      {hotel && hotel?.rooms?.length > 0 && (
+        <div>
+          <Separator className="mt-10 bg-slate-600" />
+          <h3 className="text-lg font-semibold my-4">Hotel Rooms</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {hotel.rooms.map((room) => (
+              <RoomCard key={room.id} hotel={hotel} room={room} />
+            ))}
+          </div>
         </div>
       )}
     </div>
