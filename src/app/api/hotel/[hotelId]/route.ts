@@ -15,10 +15,10 @@ export async function GET(
     });
 
     if (!hotel) {
-      return null;
+      return new NextResponse("Hotel not found", { status: 404 });
     }
 
-    return hotel;
+    return NextResponse.json(hotel);
   } catch (error) {
     console.error("Error at /api/hotel/[hotelid] GET", error);
     return new NextResponse("Internal Server Error", { status: 500 });
@@ -31,15 +31,6 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json();
-    // const userId = auth();
-
-    // if (!params.hotelid) {
-    //   return new NextResponse("Hotel Id required", { status: 400 });
-    // }
-
-    // if (!userId) {
-    //   return new NextResponse("Unauthorized", { status: 401 });
-    // }
 
     const hotel = await prismadb.hotel.update({
       where: { id: params.hotelid },
@@ -58,16 +49,6 @@ export async function DELETE(
   { params }: { params: { hotelid: number } }
 ) {
   try {
-    // const userId = auth();
-
-    // if (!params.hotelid) {
-    //   return new NextResponse("Hotel Id required", { status: 400 });
-    // }
-
-    // if (!userId) {
-    //   return new NextResponse("Unauthorized", { status: 401 });
-    // }
-
     const hotel = await prismadb.hotel.delete({
       where: { id: params.hotelid },
     });

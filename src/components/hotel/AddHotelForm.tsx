@@ -157,12 +157,12 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
 
   useEffect(() => {
     setStates(getCountryStates(selectedCountry));
-  }, [selectedCountry, getCountryStates]);
+  }, [selectedCountry]);
 
   useEffect(() => {
     const stateCities = getStateCities(selectedCountry, selectedState);
     setCities(stateCities);
-  }, [selectedCountry, selectedState, getStateCities]);
+  }, [selectedCountry, selectedState]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const amenities = {
