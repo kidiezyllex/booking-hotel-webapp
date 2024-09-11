@@ -84,3 +84,12 @@ Solve: Truy cập GitHub Secret Scanning à nhấn Allow
 
 11. Loading Libraries 
 npm install nextjs-toploader
+
+12. Kinh nghiệm 03
+Thêm border-2 và border-secondary cho Button primary để cho 2 cái button ở dưới nó bằng nhau
+<Button className="flex flex-row gap-3 border-2 border-secondary">
+<Button className="flex flex-row gap-3 " variant="outline">
+
+
+
+      

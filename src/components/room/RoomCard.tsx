@@ -99,7 +99,7 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
             fill
             src={room.image}
             alt={room.title}
-            className="object-cover"
+            className="object-cover overflow-visible"
           />
         </div>
         <CardDescription>Tiện nghi phòng</CardDescription>

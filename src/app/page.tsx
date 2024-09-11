@@ -7,11 +7,11 @@ export default function Home() {
   return (
     <div>
       <PagesTopLoader />
-      <Hotel
+      {/* <Hotel
         params={{
-          hotelId: "",
+          hotelId: 0,
         }}
-      ></Hotel>
+      ></Hotel> */}
     </div>
   );
 }

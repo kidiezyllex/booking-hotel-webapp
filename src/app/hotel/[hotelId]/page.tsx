@@ -9,9 +9,7 @@ interface HotelPageProps {
 }
 
 const Hotel = async ({ params }: HotelPageProps) => {
-  console.log("hotelId:", Number(params.hotelId));
   let nhotel = await getHotelById(Number(params.hotelId));
-  console.log(nhotel);
   return (
     <div>
       <AddHotelForm hotel={nhotel}></AddHotelForm>

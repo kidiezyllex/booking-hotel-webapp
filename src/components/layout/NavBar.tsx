@@ -17,7 +17,7 @@ export default function NavBar() {
   const { userId } = useAuth();
 
   return (
-    <div className="sticky top-0 border border-b-primary/10 bg-secondary">
+    <div className="sticky top-0 border border-b-primary/10 bg-secondary z-50">
       <Container>
         <div className="items-stretch justify-between grid grid-cols-3 gap-10">
           {/* Logo */}
@@ -63,7 +63,6 @@ export default function NavBar() {
               </Button>
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
-              <SheetToggle></SheetToggle>
             </div>
           ) : (
             <div className="flex flex-row gap-3 justify-end">
