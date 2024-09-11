@@ -1,9 +1,107 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { HotelWithRooms } from "./AddHotelForm";
 import React from "react";
 import { useAuth } from "@clerk/nextjs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Image from "next/image";
+import {
+  AirVent,
+  Bath,
+  Bed,
+  BedDouble,
+  BedSingle,
+  Building,
+  MountainSnow,
+  Ship,
+  Trees,
+  Tv,
+  Users,
+  Warehouse,
+  Wifi,
+  VolumeX,
+  Dumbbell,
+  Hand,
+  Martini,
+  WashingMachine,
+  Soup,
+  ShoppingBasket,
+  ParkingCircle,
+  Bike,
+  WifiIcon,
+  Film,
+  Waves,
+  Coffee,
+} from "lucide-react";
 
+const items = [
+  {
+    id: "gym",
+    icon: <Dumbbell className="h-4 w-4" />,
+    text: "Phòng Gym",
+  },
+  {
+    id: "spa",
+    icon: <Hand className="h-4 w-4" />,
+    text: "Phòng Spa",
+  },
+  {
+    id: "bar",
+    icon: <Martini className="h-4 w-4" />,
+    text: "Quầy Bar",
+  },
+  {
+    id: "laundry",
+    icon: <WashingMachine className="h-4 w-4" />,
+    text: "Giặt ủi",
+  },
+  {
+    id: "restaurant",
+    icon: <Soup className="h-4 w-4" />,
+    text: "Nhà hàng",
+  },
+  {
+    id: "shopping",
+    icon: <ShoppingBasket className="h-4 w-4" />,
+    text: "Mua sắm",
+  },
+  {
+    id: "freeParking",
+    icon: <ParkingCircle className="h-4 w-4" />,
+    text: "Đỗ xe miễn phí",
+  },
+  {
+    id: "bikeRental",
+    icon: <Bike className="h-4 w-4" />,
+    text: "Thuê xe đạp",
+  },
+  {
+    id: "freeWifi",
+    icon: <Wifi className="h-4 w-4" />,
+    text: "Wifi miễn phí",
+  },
+  {
+    id: "movieNights",
+    icon: <Film className="h-4 w-4" />,
+    text: "Xem phim",
+  },
+  {
+    id: "swimmingPool",
+    icon: <Waves className="h-4 w-4" />,
+    text: "Hồ bơi",
+  },
+  {
+    id: "coffeeShop",
+    icon: <Coffee className="h-4 w-4" />,
+    text: "Tiệm cafe",
+  },
+] as const;
 interface HotelCardProps {
   hotel: {
     id: number;
@@ -29,42 +127,38 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
   };
 
   return (
-    <div
-      className="border rounded-lg shadow-lg p-4 cursor-pointer hover:shadow-xl transition-shadow"
-      onClick={handleClick}
-    >
-      <img
-        src={hotel.image}
-        alt={hotel.title}
-        className="w-full h-48 object-cover rounded-t-lg"
-      />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold">{hotel.title}</h3>
-        <p className="text-sm text-gray-600">
-          {hotel.city}, {hotel.state}, {hotel.country}
-        </p>
-        <p className="mt-2 text-gray-800">
-          {hotel.description.substring(0, 100)}...
-        </p>
-        <div className="mt-4">
-          <p className="text-sm">
-            <strong>Free Parking:</strong> {hotel.freeParking ? "Yes" : "No"}
-          </p>
-          <p className="text-sm">
-            <strong>Free Wifi:</strong> {hotel.freeWifi ? "Yes" : "No"}
-          </p>
-          <p className="text-sm">
-            <strong>Bike Rental:</strong> {hotel.bikeRental ? "Yes" : "No"}
-          </p>
-          <p className="text-sm">
-            <strong>Movie Nights:</strong> {hotel.movieNights ? "Yes" : "No"}
-          </p>
-          <p className="text-sm">
-            <strong>Coffee Shop:</strong> {hotel.coffeeShop ? "Yes" : "No"}
-          </p>
+    <Card onClick={handleClick}>
+      <CardHeader>
+        <CardTitle>{hotel.title}</CardTitle>
+        <CardDescription>
+          {hotel.description.length > 100
+            ? `${hotel.description.substring(0, 100)}...`
+            : hotel.description}
+        </CardDescription>
+        {/* <CardDescription>{response.username}</CardDescription> */}
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="aspect-square overflow-hidden relative h-[200px] rounded-lg">
+          <Image
+            fill
+            src={hotel.image}
+            alt={hotel.title}
+            className="object-cover overflow-visible"
+          />
         </div>
-      </div>
-    </div>
+        <CardDescription>Các tiện ích</CardDescription>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {items.map((item) =>
+            hotel[item.id] ? (
+              <div className="flex flex-row gap-2 items-center">
+                {item.icon}
+                <p className="text-sm font-semibold">{item.text}</p>
+              </div>
+            ) : null
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -35,7 +35,8 @@ export default function NavBar() {
           {/* Search Field */}
           <div className="flex flex-row gap-2">
             <Input type="text" placeholder="Search" />
-            <Button>
+
+            <Button className="border-2 border-secondary">
               <Search className="h-4 w-4" />
             </Button>
           </div>
@@ -49,14 +50,15 @@ export default function NavBar() {
                   router.push("/sign-up");
                 }}
               >
-                Sign Up
+                Đăng ký
               </Button>
               <Button
+                className="border-2 border-secondary"
                 onClick={() => {
                   router.push("/sign-in");
                 }}
               >
-                Sign In
+                Đăng nhập
               </Button>
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
