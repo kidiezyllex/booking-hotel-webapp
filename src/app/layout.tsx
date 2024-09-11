@@ -10,8 +10,6 @@ import {
 } from "@clerk/nextjs";
 import NavBar from "@/components/layout/NavBar";
 import { ThemeProvider } from "@/components/theme-provider";
-import AddHotelForm from "@/components/hotel/AddHotelForm";
-import Hotel from "./hotel/[userId]/[hotelId]/page";
 import Container from "@/components/Container";
 import NextTopLoader from "nextjs-toploader";
 import Hero from "@/components/layout/Hero";
