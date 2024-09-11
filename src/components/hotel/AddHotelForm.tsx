@@ -17,9 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { useTranslation } from "react-i18next";
 
-import ima from "../../../i18n/image.jpg";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +44,7 @@ import { ICity, ICountry, IState } from "country-state-city";
 import { FilePen, Hospital, HousePlus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import AddRoomForm from "../room/AddRoomForm";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
@@ -53,56 +52,55 @@ export type HotelWithRooms = Hotel & { rooms: Room[] };
 const items = [
   {
     id: "gym",
-    label: "Gym",
+    label: "Phòng Gym",
   },
   {
     id: "spa",
-    label: "Spa",
+    label: "Phòng Spa",
   },
   {
     id: "bar",
-    label: "Bar",
+    label: "Quầy bar",
   },
   {
     id: "laundry",
-    label: "Laundry",
+    label: "Giặt ủi",
   },
   {
     id: "restaurant",
-    label: "Restaurant",
+    label: "Nhà hàng",
   },
   {
     id: "shopping",
-    label: "Shopping",
+    label: "Mua sắm",
   },
   {
     id: "freeParking",
-    label: "Free Parking",
+    label: "Đỗ xe miễn phí",
   },
   {
     id: "bikeRental",
-    label: "Bike Rental",
+    label: "Thuê xe đạp",
   },
   {
     id: "freeWifi",
-    label: "Free Wifi",
+    label: "Wifi miễn phí",
   },
   {
     id: "movieNights",
-    label: "Movie Nights",
+    label: "Xem phim",
   },
   {
     id: "swimmingPool",
-    label: "Swimming Pool",
+    label: "Hồ bơi",
   },
   {
     id: "coffeeShop",
-    label: "Coffee Shop",
+    label: "Tiệm cafe",
   },
 ] as const;
 
 const formSchema = z.object({
-  //   username: z.string().min(2).max(50),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   image: z.string().url("Must be a valid URL").optional(),
@@ -115,7 +113,7 @@ const formSchema = z.object({
   }),
 });
 const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
-  console.log(hotel);
+  // console.log(hotel);
   const router = useRouter();
   const { userId } = useAuth();
 
@@ -228,6 +226,10 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     }
   };
 
+  const handleDialogOpen = () => {
+    // setOpen((prev)=> !prev)
+  };
+
   // const { t } = useTranslation();
   return (
     <div>
@@ -276,7 +278,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hotel Image</FormLabel>
+                    <FormLabel>Ảnh khách sạn</FormLabel>
                     <FormControl>
                       {image ? (
                         <>
@@ -316,7 +318,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn Country</FormLabel>
+                    <FormLabel>Chọn Nước (Country)</FormLabel>
                     <Select
                       onValueChange={(value) => {
                         setSelectedCountry(value);
@@ -355,7 +357,9 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 name="state"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn State</FormLabel>
+                    <FormLabel>
+                      Chọn Tỉnh/ Thành phố/ Tiểu bang (City/ State)
+                    </FormLabel>
                     <Select
                       disabled={selectedCountry.length < 1}
                       onValueChange={(value) => {
@@ -396,7 +400,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn City</FormLabel>
+                    <FormLabel>Chọn Huyện/ Quận (District)</FormLabel>
                     <Select
                       disabled={cities.length < 1}
                       onValueChange={(value) => {
@@ -450,7 +454,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn các tiện ích</FormLabel>
+                    <FormLabel>Các tiện ích</FormLabel>
                     <div className="grid grid-cols-2 gap-6 mt-2">
                       {items.map((item) => (
                         <FormField
@@ -505,43 +509,39 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
           </div>
         </form>
       </Form>
-      <div className="flex flex-row gap-10 justify-center mt-16">
-        {/* {hotel ? (
-          <Button className="flex flex-row gap-3">
-            <HousePlus h-4 w-4 />
-          </Button>
-        ) : (
+      {hotel && (
+        <div className="flex flex-row gap-10 justify-center mt-16">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button type="submit" className="flex flex-row gap-3">
+                <HousePlus h-4 w-4 />
+                Thêm phòng
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[900px] w-[90%]">
+              <DialogHeader>
+                <DialogTitle>Thêm phòng cho Khách sạn</DialogTitle>
+                {/* <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription> */}
+              </DialogHeader>
+              <AddRoomForm
+                handleDialogOpen={handleDialogOpen}
+                hotel={hotel}
+              ></AddRoomForm>
+            </DialogContent>
+          </Dialog>
           <Button type="submit" className="flex flex-row gap-3">
-            <FilePen h-4 w-4 />
+            <Pencil h-4 w-4 />
+            Cập nhật khách sạn
           </Button>
-        )} */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button type="submit" className="flex flex-row gap-3">
-              <HousePlus h-4 w-4 />
-              Thêm phòng
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-
-        <Button type="submit" className="flex flex-row gap-3">
-          <Pencil h-4 w-4 />
-          Cập nhật khách sạn
-        </Button>
-        <Button type="submit" className="flex flex-row gap-3">
-          <Trash2 h-4 w-4 />
-          Xoá khách sạn
-        </Button>
-      </div>
+          <Button type="submit" className="flex flex-row gap-3">
+            <Trash2 h-4 w-4 />
+            Xoá khách sạn
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

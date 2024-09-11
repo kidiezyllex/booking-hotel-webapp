@@ -1,0 +1,8 @@
+{
+    id: 12,
+    title: "La Siesta Classic Ma May Hotel",
+    address: "4 Ma May St. Old Quarter, Hoan Kiem Dist., Hanoi, Vietnam",
+    desc: "A peaceful hotel with a homely feel, The La Siesta hotel is the newest member of the Hanoi Elegance hotel Group. Set apart from the rest of our other properties, it embodies pure luxury. Promising a warm welcome and personal service superbly located on old Ma May Street, it is in easy reach of Hanoi's evocative Hoan Kiem lake and major attractions. The latest gem is both modern in style as well as embodying the hidden charm of Hanoi's old quarter. The hotel has 50 spacious bedrooms, including Suites and Duplex rooms. The Suites have modern and comfortable facilities with seating area. And the duplex rooms are particularly good for families and groups of friends. For food lovers experience Vietnam's authentic cuisine at the Redbean Restaurant on the ground floor. Additional thoughtful touches include our 24hour customer service, evening turn-down service, free unlimited wireless internet with PC in every room, cable TV and movies on demand, DVD player...etc, which we hope will make your stay extra special."
+}
+
+https://www.tripadvisor.com/Hotels-g293921-Vietnam-Hotels.html

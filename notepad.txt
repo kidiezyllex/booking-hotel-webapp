@@ -68,8 +68,7 @@ export type OurFileRouter = typeof ourFileRouter;
 - npm i country-state-city
 
 10. Kinh nghiệm fix lỗi 01
-Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "asChild" không thì sẽ bị lỗi sau:
-Error: Hydration failed because the initial UI does not match what was rendered on the server.
+Solve: Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "asChild" không thì sẽ bị lỗi sau: Hydration failed because the initial UI does not match what was rendered on the server.
 
 <DialogTrigger asChild>
   <Button type="submit" className="flex flex-row gap-3">
@@ -77,3 +76,8 @@ Error: Hydration failed because the initial UI does not match what was rendered 
     Thêm phòng
   </Button>
 </DialogTrigger>
+
+11. Kinh nghiệm fix lỗi 02
+Lỗi bạn gặp phải liên quan đến tính năng bảo vệ của GitHub gọi là Push Protection. Nó phát hiện thấy có thông tin nhạy cảm (như API keys hoặc mật khẩu) trong các commit của bạn và từ chối cho phép đẩy các thay đổi lên remote.
+
+Solve: Truy cập GitHub Secret Scanning à nhấn Allow
