@@ -150,7 +150,7 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {items.map((item) =>
             hotel[item.id] ? (
-              <div className="flex flex-row gap-2 items-center">
+              <div className="flex flex-row gap-2 items-center" key={item.id}>
                 {item.icon}
                 <p className="text-sm font-semibold">{item.text}</p>
               </div>

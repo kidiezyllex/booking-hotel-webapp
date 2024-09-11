@@ -142,7 +142,7 @@ export default function AddRoomForm({
         shouldTouch: true,
       });
     }
-  }, [image]);
+  }, [image, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const amenities = {
