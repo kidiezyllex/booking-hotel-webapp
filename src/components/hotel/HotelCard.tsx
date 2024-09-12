@@ -39,6 +39,7 @@ import {
   Waves,
   Coffee,
 } from "lucide-react";
+import CursorTracker from "../animata/container/cursor-tracker";
 
 const items = [
   {
@@ -127,7 +128,8 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
   };
 
   return (
-    <Card onClick={handleClick}>
+    <Card onClick={handleClick} className="relative">
+      <CursorTracker />
       <CardHeader>
         <CardTitle>{hotel.title}</CardTitle>
         <CardDescription>

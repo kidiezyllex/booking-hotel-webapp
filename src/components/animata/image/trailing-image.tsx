@@ -176,7 +176,7 @@ const TrailingImage = () => {
   return (
     <div
       ref={containerRef}
-      className="storybook-fix absolute flex min-h-96 w-full z-40"
+      className="storybook-fix absolute flex min-h-96 w-[45%] z-40"
     >
       {trailsRef.current.map((ref, index) => (
         <AnimatedImage

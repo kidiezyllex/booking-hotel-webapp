@@ -169,7 +169,7 @@ export default function AddRoomForm({
       .post("/api/room", payload)
       .then((res) => {
         // toast
-        router.push(`/room/${res.data.id}`);
+        router.push(`${userId}/hotel/${res.data.hotelId}`);
         console.log(res.data.id);
       })
       .catch((err) => {

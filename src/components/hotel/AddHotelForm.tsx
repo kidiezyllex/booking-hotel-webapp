@@ -48,61 +48,100 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import AddRoomForm from "../room/AddRoomForm";
 import RoomCard from "../room/RoomCard";
+import {
+  AirVent,
+  Bath,
+  Bed,
+  BedDouble,
+  BedSingle,
+  Building,
+  MountainSnow,
+  Ship,
+  Trees,
+  Tv,
+  Users,
+  Warehouse,
+  Wifi,
+  VolumeX,
+  Dumbbell,
+  Hand,
+  Martini,
+  WashingMachine,
+  Soup,
+  ShoppingBasket,
+  ParkingCircle,
+  Bike,
+  WifiIcon,
+  Film,
+  Waves,
+  Coffee,
+} from "lucide-react";
 interface AddHotelFormProps {
   hotel: HotelWithRooms | null;
 }
 export type HotelWithRooms = Hotel & { rooms: Room[] };
-const items = [
+const itemsData = [
   {
     id: "gym",
-    label: "Phòng Gym",
+    icon: <Dumbbell className="h-4 w-4" />,
+    text: "Phòng Gym",
   },
   {
     id: "spa",
-    label: "Phòng Spa",
+    icon: <Hand className="h-4 w-4" />,
+    text: "Phòng Spa",
   },
   {
     id: "bar",
-    label: "Quầy bar",
+    icon: <Martini className="h-4 w-4" />,
+    text: "Quầy Bar",
   },
   {
     id: "laundry",
-    label: "Giặt ủi",
+    icon: <WashingMachine className="h-4 w-4" />,
+    text: "Giặt ủi",
   },
   {
     id: "restaurant",
-    label: "Nhà hàng",
+    icon: <Soup className="h-4 w-4" />,
+    text: "Nhà hàng",
   },
   {
     id: "shopping",
-    label: "Mua sắm",
+    icon: <ShoppingBasket className="h-4 w-4" />,
+    text: "Mua sắm",
   },
   {
     id: "freeParking",
-    label: "Đỗ xe miễn phí",
+    icon: <ParkingCircle className="h-4 w-4" />,
+    text: "Đỗ xe miễn phí",
   },
   {
     id: "bikeRental",
-    label: "Thuê xe đạp",
+    icon: <Bike className="h-4 w-4" />,
+    text: "Thuê xe đạp",
   },
   {
     id: "freeWifi",
-    label: "Wifi miễn phí",
+    icon: <Wifi className="h-4 w-4" />,
+    text: "Wifi miễn phí",
   },
   {
     id: "movieNights",
-    label: "Xem phim",
+    icon: <Film className="h-4 w-4" />,
+    text: "Xem phim",
   },
   {
     id: "swimmingPool",
-    label: "Hồ bơi",
+    icon: <Waves className="h-4 w-4" />,
+    text: "Hồ bơi",
   },
   {
     id: "coffeeShop",
-    label: "Tiệm cafe",
+    icon: <Coffee className="h-4 w-4" />,
+    text: "Tiệm cafe",
   },
 ] as const;
-
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
@@ -191,8 +230,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
       .post("/api/hotel", payload)
       .then((res) => {
         // toast
-        router.push(`/hotel/${res.data.id}`);
-        console.log(res.data.id);
+        router.push(`/${userId}/hotel/list`);
       })
       .catch((err) => {
         console.log(err.message);
@@ -263,14 +301,23 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Mô tả Khách sạn</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        className="md:h-32"
-                        placeholder="Enter your Hotel description"
-                        {...field}
-                        value={hotel?.description}
-                      />
-                    </FormControl>
+                    {hotel?.description ? (
+                      <p className="text-zinc-400">
+                        {hotel.description.length > 100
+                          ? `${hotel.description.substring(0, 150)}...Xem thêm`
+                          : hotel.description}
+                      </p>
+                    ) : (
+                      <FormControl>
+                        <Textarea
+                          className="md:h-32"
+                          placeholder="Enter your Hotel description"
+                          {...field}
+                          value={hotel?.description}
+                        />
+                      </FormControl>
+                    )}
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -457,57 +504,77 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Các tiện ích</FormLabel>
-                    <div className="grid grid-cols-2 gap-6 mt-2">
-                      {items.map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={form.control}
-                          name="items"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-center space-x-3 space-y-0"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    className="h-5 w-5"
-                                    checked={field.value?.includes(item.id)}
-                                    onCheckedChange={(checked) => {
-                                      return checked
-                                        ? field.onChange([
-                                            ...field.value,
-                                            item.id,
-                                          ])
-                                        : field.onChange(
-                                            field.value?.filter(
-                                              (value) => value !== item.id
-                                            )
-                                          );
-                                    }}
-                                  />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  {item.label}
-                                </FormLabel>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
+                    {!hotel?.items && hotel ? (
+                      <div className="grid grid-cols-2 gap-6 mt-2">
+                        {itemsData.map((item) =>
+                          hotel[item.id] ? (
+                            <div
+                              className="flex flex-row gap-2 items-center"
+                              key={item.id}
+                            >
+                              {item.icon}
+                              <p className="text-sm font-semibold">
+                                {item.text}
+                              </p>
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-6 mt-2">
+                        {itemsData.map((item) => (
+                          <FormField
+                            key={item.id}
+                            control={form.control}
+                            name="items"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={item.id}
+                                  className="flex flex-row items-center space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      className="h-5 w-5"
+                                      checked={field.value?.includes(item.id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              item.id,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== item.id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {item.text}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="flex flex-row gap-3 justify-between mt-5">
-                {hotel ? null : (
-                  <Button type="submit" className="flex flex-row gap-3">
-                    <FilePen h-4 w-4 />
-                  </Button>
-                )}
-              </div>
             </div>
+          </div>
+          <div className="flex flex-row gap-3 justify-center mt-10">
+            {hotel ? null : (
+              <Button type="submit" className="flex flex-row gap-3">
+                <FilePen h-4 w-4 />
+                Đăng ký khách sạn
+              </Button>
+            )}
           </div>
         </form>
       </Form>
