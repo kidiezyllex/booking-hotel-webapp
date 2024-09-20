@@ -1,21 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-
+import { useEffect, useMemo, useRef, useState } from "react";
 export default function TextFlip() {
-  const words = useMemo(
-    () => [
+  const tallestRef = useRef<HTMLDivElement>(null);
+  const [words, setWords] = useState<string[]>([]);
+
+  useEffect(() => {
+    const newWords = [
       "Quảng bá khách sạn!",
       "Đặt phòng nhanh chóng!",
       "Trải nghiệm nghỉ dưỡng!",
       "Tìm kiếm dễ dàng!",
       "Thanh toán an toàn!",
-    ],
-    []
-  );
+    ];
 
-  const tallestRef = useRef<HTMLDivElement>(null);
+    const timer = setTimeout(() => setWords([...newWords]), 50);
 
+    return () => clearTimeout(timer);
+  }, []);
   useEffect(() => {
     if (tallestRef.current) {
       let maxHeight = 0;
@@ -39,9 +41,6 @@ export default function TextFlip() {
 
   return (
     <div className="box-content flex gap-4 text-3xl font-semibold">
-      {/* <p className="font-bold text-5xl tracking-wide leading-snug ">
-            Đăng ký và đặt khách sạn mọi lúc!
-          </p> */}
       <div
         ref={tallestRef}
         className="flex flex-col overflow-hidden text-blue-400 text-4xl tracking-wide leading-snug"

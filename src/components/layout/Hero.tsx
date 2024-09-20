@@ -59,9 +59,6 @@ export default function Hero() {
     <Container>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%]  gap-5 items-center">
         <div className="w-full flex flex-col gap-3">
-          {/* <p className="font-bold text-5xl tracking-wide leading-snug ">
-            Đăng ký và đặt khách sạn mọi lúc!
-          </p> */}
           <TextFlip />
 
           <p className="text-1xl text-zinc-400 italic">
@@ -89,7 +86,7 @@ export default function Hero() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-5">
           <div className="flex flex-col gap-5 w-full">
-            <TrailingImage />
+            {/* <TrailingImage /> */}
             <div className="w-full h-52 flex items-center justify-center py-4 relative">
               <Image
                 layout="fill"

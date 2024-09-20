@@ -7,11 +7,9 @@ export default function CursorTracker() {
   const infoRef = useRef<HTMLDivElement>(null);
 
   const update = useCallback(({ x, y }: { x: number; y: number }) => {
-    // We need to offset the position to center the info div
     const offsetX = (infoRef.current?.offsetWidth || 0) / 2;
     const offsetY = (infoRef.current?.offsetHeight || 0) / 2;
 
-    // Use CSS variables to position the info div instead of state to avoid re-renders
     infoRef.current?.style.setProperty("--x", `${x - offsetX}px`);
     infoRef.current?.style.setProperty("--y", `${y - offsetY}px`);
   }, []);
@@ -23,9 +21,6 @@ export default function CursorTracker() {
       ref={divRef}
       className="group absolute h-full w-full right-0 cursor-non p-6 text-violet-800"
     >
-      {/* Actual content */}
-
-      {/* Cursor tracker */}
       <div
         ref={infoRef}
         style={{
