@@ -15,10 +15,10 @@ type RoomDataType = {
 // Định nghĩa interface cho store đặt phòng
 interface BookRoomStore {
   bookingRoomData: RoomDataType | null;
-  paymentIntent: string | null;
+  paymentIntentId: string | null;
   clientSecret: string | undefined;
   setRoomData: (data: RoomDataType) => void;
-  setPaymentIntent: (paymentIntent: string) => void;
+  setPaymentIntentId: (paymentIntentId: string) => void;
   setClientSecret: (clientSecret: string) => void;
   resetBookRoom: () => void;
 }
@@ -37,19 +37,19 @@ const useBookRoom = create<BookRoomStore>(
     (set) => ({
       // Trạng thái ban đầu
       bookingRoomData: null,
-      paymentIntent: null,
+      paymentIntentId: null,
       clientSecret: undefined,
 
       // Action để cập nhật
       setRoomData: (data) => set(() => ({ bookingRoomData: data })),
-      setPaymentIntent: (paymentIntent) => set(() => ({ paymentIntent })),
+      setPaymentIntentId: (paymentIntentId) => set(() => ({ paymentIntentId })),
       setClientSecret: (clientSecret) => set(() => ({ clientSecret })),
 
       // Action để đặt lại store về trạng thái ban đầu
       resetBookRoom: () =>
         set(() => ({
           bookingRoomData: null,
-          paymentIntent: null,
+          paymentIntentId: null,
           clientSecret: undefined,
         })),
     }),

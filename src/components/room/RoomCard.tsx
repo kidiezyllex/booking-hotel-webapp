@@ -35,6 +35,10 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
+import useBookRoom from "../../../hook/useBookRoom";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { getUser } from "@/actions/getUser";
 
 const roomAmenities = [
   {
@@ -101,8 +105,11 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
   const [includeBreakFast, setIncludesBreakFast] = useState(false);
   const [days, setDays] = useState(0);
   const [bookingIsLoading, setBookingIsLoading] = useState(false);
+  const { paymentIntentId, setRoomData, setPaymentIntentId, setClientSecret } =
+    useBookRoom();
   const { userId } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     if (date?.from && date?.to) {
@@ -123,7 +130,7 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
     }
   }, [date, room.roomPrice, includeBreakFast]);
 
-  const handleBookRoom = () => {
+  const handleBookRoom = async () => {
     if (!userId) {
       return toast({
         variant: "destructive",
@@ -139,7 +146,67 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
     }
 
     if (date?.from && date?.to) {
-      // Continue booking logic here...
+      setBookingIsLoading(true);
+
+      const bookingRoomData = {
+        room,
+        totalPrice,
+        breakFastIncluded: false,
+        startDate: date.from,
+        endDate: date.to,
+      };
+
+      setRoomData(bookingRoomData);
+
+      try {
+        const user = await getUser(userId);
+        const response = await axios.post("/api/create-payment-intent", {
+          booking: {
+            userName: user.fullName,
+            userEmail: user.email,
+            userId: userId,
+            hotelOwnerId: hotel.userId,
+            hotelId: hotel.id,
+            roomId: room.id,
+            startDate: date.from,
+            endDate: date.to,
+            breakFastIncluded: includeBreakFast,
+            totalPrice: totalPrice,
+          },
+          payment_intent_id: paymentIntentId,
+        });
+        // const response = await axios.post("/api/create-payment-intent", {
+        //   booking: {
+        //     hotelOwnerId: "user_2k7rTmzXCGyvI6dTmv0gXnH2bCB",
+        //     hotelId: 1,
+        //     roomId: 1,
+        //     startDate: "2024-09-19T17:00:00.000Z",
+        //     endDate: "2024-09-22T17:00:00.000Z",
+        //     breakFastIncluded: false,
+        //     totalPrice: 300,
+        //   },
+        //   payment_intent_id: null,
+        // });
+
+        if (response.status === 401) {
+          router.push("/login");
+          return;
+        }
+
+        const data = response.data;
+        setClientSecret(data.paymentIntent.client_secret);
+        setPaymentIntentId(data.paymentIntent.id);
+        router.push(`/${userId}/book-room`);
+      } catch (error) {
+        console.error("Error creating payment intent:", error);
+      } finally {
+        setBookingIsLoading(false);
+      }
+    } else {
+      toast({
+        variant: "destructive",
+        description: "Oops! Select a date.",
+      });
     }
   };
 

@@ -8,6 +8,7 @@ const publicRoutes = createRouteMatcher([
   "/",
   "/hotel-details/:id",
   "/api/uploadthing",
+  "/api/create-payment-intent",
 ]);
 
 export default clerkMiddleware((auth, req) => {

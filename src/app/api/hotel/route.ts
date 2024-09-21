@@ -13,7 +13,7 @@ export async function POST(req: Request) {
           create: [],
         },
         bookings: {
-          create: [], // Optional: omit if not creating new bookings
+          create: [],
         },
       },
     });
