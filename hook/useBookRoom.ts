@@ -1,6 +1,9 @@
 import { Room } from "@prisma/client";
 import { create, StateCreator } from "zustand";
+// Import middleware persist và kiểu PersistOptions từ Zustand
 import { persist, PersistOptions } from "zustand/middleware";
+
+// Định nghĩa một kiểu tùy chỉnh cho dữ liệu đặt phòng
 type RoomDataType = {
   room: Room;
   totalPrice: number;
@@ -9,6 +12,7 @@ type RoomDataType = {
   endDate: Date;
 };
 
+// Định nghĩa interface cho store đặt phòng
 interface BookRoomStore {
   bookingRoomData: RoomDataType | null;
   paymentIntent: string | null;
@@ -19,21 +23,29 @@ interface BookRoomStore {
   resetBookRoom: () => void;
 }
 
-// Define persist configuration
+// Định nghĩa kiểu cho cấu hình middleware persist
+// Điều này cần thiết để đảm bảo kiểu dữ liệu chính xác khi sử dụng persist với Zustand
 type BookRoomPersist = (
   config: StateCreator<BookRoomStore>,
   options: PersistOptions<BookRoomStore>
 ) => StateCreator<BookRoomStore>;
 
 const useBookRoom = create<BookRoomStore>(
-  (persist as BookRoomPersist)(
+  // Ép kiểu persist thành BookRoomPersist để đảm bảo kiểu dữ liệu chính xác
+  (persist as unknown as BookRoomPersist)(
+    // Định nghĩa state và các action của store
     (set) => ({
+      // Trạng thái ban đầu
       bookingRoomData: null,
       paymentIntent: null,
       clientSecret: undefined,
+
+      // Action để cập nhật
       setRoomData: (data) => set(() => ({ bookingRoomData: data })),
       setPaymentIntent: (paymentIntent) => set(() => ({ paymentIntent })),
       setClientSecret: (clientSecret) => set(() => ({ clientSecret })),
+
+      // Action để đặt lại store về trạng thái ban đầu
       resetBookRoom: () =>
         set(() => ({
           bookingRoomData: null,
@@ -41,6 +53,7 @@ const useBookRoom = create<BookRoomStore>(
           clientSecret: undefined,
         })),
     }),
+    // Cấu hình cho middleware persist
     { name: "book-room-storage" }
   )
 );

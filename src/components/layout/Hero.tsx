@@ -22,11 +22,8 @@ import {
 import Container from "../Container";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import HotelList from "../hotel/HotelList";
-import { getHotels } from "@/actions/getHotels";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
-import axios from "axios";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -43,15 +40,6 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
-
-interface HomeProps {
-  searchParams: {
-    title: string;
-    country: string;
-    state: string;
-    city: string;
-  };
-}
 
 export default function Hero() {
   const pathname = usePathname();

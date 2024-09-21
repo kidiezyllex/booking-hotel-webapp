@@ -33,6 +33,9 @@ import { DateRange } from "react-day-picker";
 import { differenceInCalendarDays } from "date-fns";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
+import { useAuth } from "@clerk/nextjs";
+import { useToast } from "@/hooks/use-toast";
+
 const roomAmenities = [
   {
     id: "roomService",
@@ -98,6 +101,8 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
   const [includeBreakFast, setIncludesBreakFast] = useState(false);
   const [days, setDays] = useState(0);
   const [bookingIsLoading, setBookingIsLoading] = useState(false);
+  const { userId } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (date?.from && date?.to) {
@@ -117,6 +122,26 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
       setTotalPrice(room?.roomPrice || 0);
     }
   }, [date, room.roomPrice, includeBreakFast]);
+
+  const handleBookRoom = () => {
+    if (!userId) {
+      return toast({
+        variant: "destructive",
+        description: "Oops! Make sure you are logged in.",
+      });
+    }
+
+    if (!hotel?.userId) {
+      return toast({
+        variant: "destructive",
+        description: "Something went wrong, refresh the page and try again!",
+      });
+    }
+
+    if (date?.from && date?.to) {
+      // Continue booking logic here...
+    }
+  };
 
   return (
     <Card>
@@ -191,7 +216,11 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
         <p className="text-ml font-semibold">
           {days > 0 ? `Tổng tiền: ${totalPrice} cho ${days} ngày` : null}
         </p>
-        <Button disabled={bookingIsLoading} type="button">
+        <Button
+          disabled={bookingIsLoading}
+          type="button"
+          onClick={() => handleBookRoom()}
+        >
           {bookingIsLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4" />

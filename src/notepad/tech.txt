@@ -1,0 +1,62 @@
+
+1. Clerk Auth
+Create project and install follow step: https://dashboard.clerk.com/
+
+2. Thư viện React Icon
+npm install lucide-react
+<Mail className="w-6 h-6 text-blue-500" />
+
+3. README Skill Icons
+https://github.com/tandpfun/skill-icons#readme
+https://github.com/alexandresanlim/Badges4-README.md-Profile
+
+4. PlanetScale Database (not free)
+https://app.planetscale.com/buitranthienan1111/welcome
+
+5. Free Postgresql Database Server (free) 
+https://console.neon.tech/
+
+6. Prisma 
+- Install: 
+npm i prisma
+npm i @prisma/client
+npx prisma init
+
+- Sau khi thiết lập model và relationship
+npx prisma generate
+npx prisma db push
+
+- Xem DB:
+npx prisma studio
+
+7. Uploadthing
+- Công cụ upload Image
+- Document: https://docs.uploadthing.com/
+- Install & setup follow step: https://docs.uploadthing.com/getting-started/appdir
+
+- Config core.ts, thay thế phần auth() trong file mẫu của docs Uploadthing, khi sử dụng Clerk
+import { auth } from "@clerk/nextjs/server";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError } from "uploadthing/server";
+const f = createUploadthing();
+export const ourFileRouter = {
+  imageUploader: f({ image: { maxFileSize: "8MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const { userId } = auth();
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.userId);
+      console.log("file url", file.url);
+      return { uploadedBy: metadata.userId };
+    }),
+} satisfies FileRouter;
+export type OurFileRouter = typeof ourFileRouter;
+
+8. Loading Libraries 
+npm install nextjs-toploader
+
+
+
+      
