@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Hotel, Room, Booking } from "@prisma/client";
 import {
   Card,
@@ -25,15 +25,15 @@ import {
   Warehouse,
   Wifi,
   VolumeX,
+  Loader2,
+  Wand2,
 } from "lucide-react";
-interface RoomCardProps {
-  hotel?: Hotel;
-  rooms?: Room[];
-  room: Room;
-  bookings?: Booking[];
-}
-
-const items = [
+import { DatePickerWithRange } from "./DatePickerWithRange";
+import { DateRange } from "react-day-picker";
+import { differenceInCalendarDays } from "date-fns";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Button } from "../ui/button";
+const roomAmenities = [
   {
     id: "roomService",
     icon: <Bed className="h-4 w-4" />,
@@ -84,9 +84,40 @@ const items = [
     icon: <VolumeX className="h-4 w-4" />,
     text: "Cách âm",
   },
-] as const;
+];
+interface RoomCardProps {
+  hotel?: Hotel;
+  rooms?: Room[];
+  room: Room;
+  bookings?: Booking[];
+}
 
 const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [totalPrice, setTotalPrice] = useState(room.roomPrice);
+  const [includeBreakFast, setIncludesBreakFast] = useState(false);
+  const [days, setDays] = useState(0);
+  const [bookingIsLoading, setBookingIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (date?.from && date?.to) {
+      const dayCount = differenceInCalendarDays(date.to, date.from);
+      setDays(dayCount);
+
+      if (dayCount && room?.roomPrice) {
+        if (includeBreakFast && room.breakFastPrice) {
+          setTotalPrice(
+            dayCount * room.roomPrice + dayCount * room.breakFastPrice
+          );
+        } else {
+          setTotalPrice(dayCount * room.roomPrice);
+        }
+      }
+    } else {
+      setTotalPrice(room?.roomPrice || 0);
+    }
+  }, [date, room.roomPrice, includeBreakFast]);
+
   return (
     <Card>
       <CardHeader>
@@ -94,7 +125,7 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
         <CardDescription>{room.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="aspect-square overflow-hidden relative h-[200px] rounded-lg">
+        <div className="aspect-square overflow-hidden relative h-[300px] rounded-lg">
           <Image
             fill
             src={room.image}
@@ -128,9 +159,10 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
             </p>
           </div>
         </div>
+        <Separator></Separator>
         <CardDescription>Các tiện ích</CardDescription>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {items.map((item) =>
+          {roomAmenities.map((item) =>
             room[item.id] ? (
               <div className="flex flex-row gap-2 items-center" key={item.id}>
                 {item.icon}
@@ -139,6 +171,7 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
             ) : null
           )}
         </div>
+        <Separator></Separator>
         <CardDescription>Giá phòng</CardDescription>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <p className="text-sm font-semibold">
@@ -148,6 +181,29 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
             Giá bữa sáng: ${room?.breakFastPrice}
           </p>
         </div>
+        <Separator></Separator>
+        <CardDescription>Chọn ngày</CardDescription>
+        <DatePickerWithRange
+          date={date}
+          setDate={setDate}
+        ></DatePickerWithRange>
+        <Separator></Separator>
+        <p className="text-ml font-semibold">
+          {days > 0 ? `Tổng tiền: ${totalPrice} cho ${days} ngày` : null}
+        </p>
+        <Button disabled={bookingIsLoading} type="button">
+          {bookingIsLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4" />
+              Loading...
+            </>
+          ) : (
+            <>
+              <Wand2 className="mr-2 h-4 w-4" />
+              Book Room
+            </>
+          )}
+        </Button>
       </CardContent>
     </Card>
   );

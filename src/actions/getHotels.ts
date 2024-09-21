@@ -2,25 +2,21 @@ import prismadb from "../../lib/prismadb";
 
 export const getHotels = async (searchParams: {
   title: string;
-  country: string;
-  state: string;
-  city: string;
+  provinces: string;
+  districts: string;
 }) => {
   try {
-    const { title, country, state, city } = searchParams;
+    const { title, provinces, districts } = searchParams;
     const hotels = await prismadb.hotel.findMany({
       where: {
         title: {
           contains: title,
         },
-        country: {
-          contains: country,
+        provinces: {
+          contains: provinces,
         },
-        state: {
-          contains: state,
-        },
-        city: {
-          contains: city,
+        districts: {
+          contains: districts,
         },
       },
       include: {

@@ -14,9 +14,8 @@ model Hotel {
   title               String   @db.Text
   description         String  
   image               String
-  country             String
-  state               String
-  city                String
+  provinces           String
+  districts           String
   locationDescription String  
   gym                 Boolean  @default(false)
   spa                 Boolean  @default(false)
@@ -68,6 +67,7 @@ model Room {
 model Booking {
   id                  Int      @id @default(autoincrement()) // Tự động tăng
   userName            String 
+  userEmail           String 
   userId              String 
   roomId              Int 
   hotelId             Int 

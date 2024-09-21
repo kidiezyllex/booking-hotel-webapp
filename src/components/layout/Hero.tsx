@@ -2,7 +2,7 @@
 
 import { Hotel, Pencil, TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 
 import {
@@ -26,6 +26,7 @@ import HotelList from "../hotel/HotelList";
 import { getHotels } from "@/actions/getHotels";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
+import axios from "axios";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -51,10 +52,12 @@ interface HomeProps {
     city: string;
   };
 }
+
 export default function Hero() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const router = useRouter();
+
   return isHomePage ? (
     <Container>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%]  gap-5 items-center">

@@ -8,7 +8,6 @@ export const getHotelById = async (hotelId: number) => {
       },
       include: {
         rooms: true,
-        // bookings: true,
       },
     });
 

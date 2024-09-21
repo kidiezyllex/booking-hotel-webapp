@@ -15,6 +15,7 @@ const useLocation = () => {
     if (!state) return null;
     return state;
   };
+
   const getCountryStates = (countryCode: string) => {
     return State.getAllStates().filter(
       (state) => state.countryCode === countryCode
