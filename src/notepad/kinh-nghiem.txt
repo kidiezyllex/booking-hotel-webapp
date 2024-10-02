@@ -19,3 +19,6 @@ Solve: Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "a
     Thêm phòng
   </Button>
 </DialogTrigger>
+
+4. Fix err (2339): Property 'x' does not exist on type 'Y'
+--> {(hotel as any).id}

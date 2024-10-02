@@ -107,10 +107,10 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     const provincesCode = parseInt(provincesName?.match(/\d+/)[0]);
 
     const provincesByCode = provincesList.find(
-      (item) => item!.code === provincesCode
+      (item) => (item as any).code === provincesCode
     );
-    console.log(provincesByCode!.districts);
-    setDistrictsList(provincesByCode!.districts);
+    console.log((provincesByCode as any).districts);
+    setDistrictsList((provincesByCode as any).districts);
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -180,13 +180,11 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
     // setOpen((prev)=> !prev)
   };
 
-  // const { t } = useTranslation();
   return (
     <div>
-      <h1 className="text-2xl font-bold my-6">Đăng ký khách sạn của bạn</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className=" flex-col grid grid-cols-1 md:grid-cols-2 gap-10 bg-background p-8 rounded-md">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className=" flex-col grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Thông tin cơ bản */}
             <Card>
               <CardHeader className="p-4">

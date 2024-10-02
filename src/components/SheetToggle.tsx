@@ -19,6 +19,7 @@ import {
   Menu,
   MessageSquareText,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function SheetToggle() {
@@ -35,6 +36,15 @@ export function SheetToggle() {
         <SheetHeader>
           <SheetTitle>Khách sạn của bạn</SheetTitle>
         </SheetHeader>
+        <Link href={`/${userId}/hotel/0`}>
+          <Button
+            className="w-full my-5 flex flex-row justify-start gap-3"
+            variant="outline"
+          >
+            <FilePen h-4 w-4 />
+            Đăng ký Khách sạn của bạn
+          </Button>
+        </Link>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
@@ -45,16 +55,7 @@ export function SheetToggle() {
           <Hotel h-4 w-4 />
           Xem Khách sạn của bạn
         </Button>
-        <Button
-          className="w-full my-5 flex flex-row justify-start gap-3"
-          variant="outline"
-          onClick={() => {
-            router.push(`/${userId}/hotel/0`);
-          }}
-        >
-          <FilePen h-4 w-4 />
-          Đăng ký Khách sạn của bạn
-        </Button>
+
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"

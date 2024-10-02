@@ -4,24 +4,23 @@ import Container from "../Container";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
-// import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { SheetToggle } from "../SheetToggle";
+import Link from "next/link";
+import { Dancing_Script } from "next/font/google";
+import DropdownMenuToggle from "../DropdownMenuToggle";
+
+const dancingScript = Dancing_Script({ subsets: ["latin"] });
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
-
+  // user_2k7rTmzXCGyvI6dTmv0gXnH2bCB
   return (
     <div className="sticky top-0 border border-b-primary/10 bg-secondary z-50">
-      <Container>
+      <div className="max-w-[1920px] w-full mx-auto xl:px-20 px-4 py-4 bg-background dark:bg-slate-800">
         <div className="items-stretch justify-between grid grid-cols-3 gap-10">
-          {/* Logo */}
-          <div
-            className="flex flex-row items-center gap-3"
-            onClick={() => router.push("/")}
-          >
+          <Link href={"/"} className="flex flex-row items-center gap-3">
             <Avatar>
               <AvatarImage
                 src={
@@ -30,8 +29,10 @@ export default function NavBar() {
                 alt="SKyline"
               />
             </Avatar>
-            <div className="font-bold text-xl">Skyline Hotel</div>
-          </div>
+            <div className={`${dancingScript.className} font-bold text-3xl`}>
+              Skyline Hotel
+            </div>
+          </Link>
           {/* Search Field */}
           <div className="flex flex-row gap-2">
             <Input type="text" placeholder="Search" />
@@ -71,11 +72,11 @@ export default function NavBar() {
 
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
-              <SheetToggle></SheetToggle>
+              <DropdownMenuToggle></DropdownMenuToggle>
             </div>
           )}
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

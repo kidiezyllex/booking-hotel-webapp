@@ -1,31 +1,17 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useAuth } from "@clerk/nextjs";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import {
-  AirVent,
-  Bath,
-  Bed,
-  BedDouble,
-  BedSingle,
-  Building,
-  MountainSnow,
-  Ship,
-  Trees,
-  Tv,
-  Users,
-  Warehouse,
   Wifi,
-  VolumeX,
   Dumbbell,
   Hand,
   Martini,
@@ -34,7 +20,6 @@ import {
   ShoppingBasket,
   ParkingCircle,
   Bike,
-  WifiIcon,
   Film,
   Waves,
   Coffee,
@@ -124,7 +109,7 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
   const router = useRouter();
   const { userId } = useAuth();
   const handleClick = () => {
-    router.push(`/${userId}/hotel/${hotel.id}`);
+    router.push(`/${userId}/author/dashboard/hotel/${hotel.id}`);
   };
 
   return (
@@ -137,7 +122,6 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
             ? `${hotel.description.substring(0, 100)}...`
             : hotel.description}
         </CardDescription>
-        {/* <CardDescription>{response.username}</CardDescription> */}
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="aspect-square overflow-hidden relative h-[200px] rounded-lg">
@@ -165,19 +149,3 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
 };
 
 export default HotelCard;
-
-// const HotelCard = ({ hotel }: { hotel: HotelWithRooms }) => {
-//   const pathname = usePathname();
-//   const isMyHotels = pathname.includes("my-hotels");
-//   const router = useRouter();
-
-//   return (
-//     <div
-//       onClick={() => isMyHotels && router.push(`/hotel-details/${hotel.id}`)}
-//     >
-//       gggg
-//     </div>
-//   );
-// };
-
-// export default HotelCard;

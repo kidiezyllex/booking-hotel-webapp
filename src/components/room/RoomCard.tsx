@@ -175,18 +175,6 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
           },
           payment_intent_id: paymentIntentId,
         });
-        // const response = await axios.post("/api/create-payment-intent", {
-        //   booking: {
-        //     hotelOwnerId: "user_2k7rTmzXCGyvI6dTmv0gXnH2bCB",
-        //     hotelId: 1,
-        //     roomId: 1,
-        //     startDate: "2024-09-19T17:00:00.000Z",
-        //     endDate: "2024-09-22T17:00:00.000Z",
-        //     breakFastIncluded: false,
-        //     totalPrice: 300,
-        //   },
-        //   payment_intent_id: null,
-        // });
 
         if (response.status === 401) {
           router.push("/login");

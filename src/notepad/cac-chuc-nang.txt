@@ -1,0 +1,8 @@
+1. Đặt khách sạn
+- Giao diện đặt khách sạn
+- Giao diện xem phòng dã đặt
+
+2. Quản lý khách sạn
+- Xem khách sạn của mình
+- Chỉnh sửa
+- Xoá

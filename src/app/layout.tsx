@@ -42,7 +42,7 @@ export default function RootLayout({
               <NavBar></NavBar>
               <Hero></Hero>
               <section className="flex flex-grow">
-                <Container>{children}</Container>
+                <div className="max-w-[1920px] w-full">{children}</div>
               </section>
             </main>
           </ThemeProvider>
