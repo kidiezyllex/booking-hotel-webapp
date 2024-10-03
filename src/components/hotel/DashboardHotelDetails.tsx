@@ -9,19 +9,22 @@ import {
 } from "@/components/ui/breadcrumb";
 import SidebarMenu from "@/components/hotel/SidebarMenu";
 import { useState } from "react";
-import { Hotel, Room } from "@prisma/client";
+import { Booking, Hotel, Room } from "@prisma/client";
 import AddHotelForm from "./AddHotelForm";
 import { Undo2, Home } from "lucide-react";
-interface AddHotelFormProps {
-  hotel: HotelWithRooms | null;
-}
 
 export type HotelWithRooms = Hotel & { rooms: Room[] };
 const sidebarItems = [
   { icon: Home, label: "Dashboard", value: "dashboard" },
   { icon: Undo2, label: "Quay lại", value: "back" },
 ];
-export default function DashboardHotelDetails({ hotel }: AddHotelFormProps) {
+export default function DashboardHotelDetails({
+  hotel,
+  bookings,
+}: {
+  hotel: HotelWithRooms | null;
+  bookings: Booking[];
+}) {
   const [activeSection, setActiveSection] = useState("dashboard");
   // const renderMainContent = () => {
   //   switch (activeSection) {
@@ -79,7 +82,7 @@ export default function DashboardHotelDetails({ hotel }: AddHotelFormProps) {
           <p className="text-xl font-semibold text-blue-500 mb-4">
             KHÁCH SẠN: <span className="text-primary">{hotel.title}</span>
           </p>
-          <AddHotelForm hotel={hotel} />
+          <AddHotelForm hotel={hotel} bookings={bookings} />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { Hotel, Room } from "@prisma/client";
+import { Booking, Hotel, Room } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,10 +45,6 @@ import RoomCard from "../room/RoomCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { hotelAmenities } from "./data";
 
-interface AddHotelFormProps {
-  hotel: HotelWithRooms | null;
-}
-
 export type HotelWithRooms = Hotel & { rooms: Room[] };
 
 const formSchema = z.object({
@@ -62,7 +58,13 @@ const formSchema = z.object({
     message: "You have to select at least one item.",
   }),
 });
-const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
+const AddHotelForm = ({
+  hotel,
+  bookings,
+}: {
+  hotel: HotelWithRooms | null;
+  bookings: Booking[];
+}) => {
   const router = useRouter();
   const { userId } = useAuth();
   const [image, setImage] = useState<string | undefined>(hotel?.image);
@@ -279,10 +281,13 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                                 provincesList.map((item) => {
                                   return (
                                     <SelectItem
-                                      key={item.code}
-                                      value={item.name + `(${item.code})`}
+                                      key={(item as any).code}
+                                      value={
+                                        (item as any).name +
+                                        `(${(item as any).code})`
+                                      }
                                     >
-                                      {item.name}
+                                      {(item as any).name}
                                     </SelectItem>
                                   );
                                 })}
@@ -324,10 +329,10 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                                 districtsList.map((item) => {
                                   return (
                                     <SelectItem
-                                      key={item.code}
-                                      value={item.name}
+                                      key={(item as any).code}
+                                      value={(item as any).name}
                                     >
-                                      {item.name}
+                                      {(item as any).name}
                                     </SelectItem>
                                   );
                                 })}
@@ -420,7 +425,7 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      {!hotel?.items && hotel ? (
+                      {(!hotel as any).items && hotel ? (
                         <div className="grid grid-cols-2 gap-6 mt-2">
                           {hotelAmenities.map((item) =>
                             hotel[item.id] ? (
@@ -530,8 +535,13 @@ const AddHotelForm = ({ hotel }: AddHotelFormProps) => {
           <Separator className="mt-10 bg-slate-600" />
           <h3 className="text-lg font-semibold my-4">Hotel Rooms</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {hotel.rooms.map((room) => (
-              <RoomCard key={room.id} hotel={hotel} room={room} />
+            {hotel?.rooms.map((room) => (
+              <RoomCard
+                key={room.id}
+                hotel={hotel}
+                room={room}
+                bookings={bookings}
+              />
             ))}
           </div>
         </div>

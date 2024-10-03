@@ -44,7 +44,7 @@ export default function Dashboard({ hotels }: { hotels: [] }) {
             <p className="text-xl font-semibold text-blue-500 mb-4">
               TẠO KHÁCH SẠN MỚI CỦA BẠN
             </p>
-            <AddHotelForm hotel={undefined}></AddHotelForm>
+            <AddHotelForm hotel={null} bookings={null}></AddHotelForm>
           </div>
         );
       default:

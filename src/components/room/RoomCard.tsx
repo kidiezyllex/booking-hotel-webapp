@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Hotel, Room, Booking } from "@prisma/client";
 import {
   Card,
@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { DatePickerWithRange } from "./DatePickerWithRange";
 import { DateRange } from "react-day-picker";
-import { differenceInCalendarDays } from "date-fns";
+import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 import { useAuth } from "@clerk/nextjs";
@@ -129,6 +129,21 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
       setTotalPrice(room?.roomPrice || 0);
     }
   }, [date, room.roomPrice, includeBreakFast]);
+
+  const disabledDates = useMemo(() => {
+    let dates: Date[] = [];
+    const roomBookings = bookings.filter(
+      (booking) => booking.roomId === room.id
+    );
+    roomBookings.forEach((booking) => {
+      const range = eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+      dates = [...dates, ...range];
+    });
+    return dates;
+  }, [bookings]);
 
   const handleBookRoom = async () => {
     if (!userId) {
@@ -266,6 +281,7 @@ const RoomCard = ({ hotel, room, bookings }: RoomCardProps) => {
         <DatePickerWithRange
           date={date}
           setDate={setDate}
+          disabledDates={disabledDates}
         ></DatePickerWithRange>
         <Separator></Separator>
         <p className="text-ml font-semibold">
